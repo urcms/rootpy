@@ -12,8 +12,14 @@ attributes and displayed via ROOT or matplotlib.
 
 
 
+.. rst-class:: horizontal
+
+
 .. image:: images/plot_matplotlib_hist_1.png
-   :align: center
+   :scale: 50
+
+.. image:: images/root_plot_matplotlib_hist_1.png
+   :scale: 50
 
 
 

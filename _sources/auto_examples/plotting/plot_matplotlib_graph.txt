@@ -15,10 +15,13 @@ attributes and displayed via ROOT or matplotlib.
 .. rst-class:: horizontal
 
 
+.. image:: images/plot_matplotlib_graph_1.png
+   :scale: 50
+
 .. image:: images/plot_matplotlib_graph_2.png
    :scale: 50
 
-.. image:: images/plot_matplotlib_graph_1.png
+.. image:: images/root_plot_matplotlib_graph_1.png
    :scale: 50
 
 
