@@ -1,0 +1,18 @@
+
+
+.. _example_tree_model_hierarchy.py:
+
+
+==================================
+A complex hierarchy of tree models
+==================================
+
+This example demonstrates how to construct complex tree models by combining
+multiple simple models.
+
+
+**Python source code:** :download:`model_hierarchy.py <model_hierarchy.py>`
+
+.. literalinclude:: model_hierarchy.py
+    :lines: 11-
+    

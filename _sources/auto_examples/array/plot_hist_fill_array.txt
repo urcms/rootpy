@@ -1,0 +1,36 @@
+
+
+.. _example_array_plot_hist_fill_array.py:
+
+
+===================================
+Fill a histogram with a NumPy array
+===================================
+
+This example demonstrates how a 1D, 2D, or 3D ROOT histogram can be efficiently
+filled with a NumPy array.
+
+
+
+.. rst-class:: horizontal
+
+
+.. image:: images/root_plot_hist_fill_array_1.png
+   :scale: 50
+
+.. image:: images/root_plot_hist_fill_array_2.png
+   :scale: 50
+
+.. image:: images/root_plot_hist_fill_array_3.png
+   :scale: 50
+
+
+
+
+**Python source code:** :download:`plot_hist_fill_array.py <plot_hist_fill_array.py>`
+
+.. literalinclude:: plot_hist_fill_array.py
+    :lines: 11-
+
+**Total running time of the example:**  0.27 seconds
+    

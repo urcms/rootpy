@@ -1,0 +1,460 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+
+    <title>rootpy.io.pickler &mdash; rootpy dev documentation</title>
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+
+
+    
+    <link rel="stylesheet" href="../../../_static/rtd.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     'dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/searchtools.js"></script>
+    <link rel="top" title="rootpy dev documentation" href="../../../index.html" />
+    <link rel="up" title="rootpy.io" href="../io.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../io.html" accesskey="U">rootpy.io</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for rootpy.io.pickler</h1><div class="highlight"><pre>
+<span class="c"># Copyright 2012 the rootpy developers</span>
+<span class="c"># distributed under the terms of the GNU General Public License</span>
+<span class="c"># Original author: Scott Snyder scott.snyder(a)cern.ch, 2004.</span>
+<span class="sd">&quot;&quot;&quot;Pickle python data into a ROOT file, preserving references to ROOT objects.</span>
+
+<span class="sd">This module allows pickling python objects into a ROOT file. The python</span>
+<span class="sd">objects may contain references to named ROOT objects. If one has set up a</span>
+<span class="sd">structure of python objects to hold ROOT histograms, this provides a convenient</span>
+<span class="sd">way of saving and restoring your histograms. The pickled python data are</span>
+<span class="sd">stored in an additional string object in the ROOT file; any ROOT objects are</span>
+<span class="sd">stored as usual. (Thus, ROOT files written by the pickler can be read just</span>
+<span class="sd">like any other ROOT file if you don&#39;t care about the python data.)</span>
+
+<span class="sd">Here&#39;s an example of writing a pickle::</span>
+
+<span class="sd">   from rootpy.plotting import Hist</span>
+<span class="sd">   from rootpy.io.pickler import dump</span>
+<span class="sd">   hlist = []</span>
+<span class="sd">   for i in range(10):</span>
+<span class="sd">       hlist.append(Hist(10, 0, 10))</span>
+<span class="sd">   dump(hlist, &#39;test.root&#39;)</span>
+
+<span class="sd">This writes a list of histograms to test.root. The histograms may be read back</span>
+<span class="sd">like this::</span>
+
+<span class="sd">   from rootpy.io.pickler import load</span>
+<span class="sd">   hlist = load(&#39;test.root&#39;)</span>
+
+<span class="sd">The following additional notes apply:</span>
+
+<span class="sd">* Pickling may not always work correctly for the case of python objects</span>
+<span class="sd">  deriving from ROOT objects. It will probably also not work for the case of</span>
+<span class="sd">  ROOT objects which do not derive from TObject.</span>
+
+<span class="sd">* When the pickled data are being read, if a class doesn&#39;t exist,</span>
+<span class="sd">  a dummy class with no methods will be used instead. This is different</span>
+<span class="sd">  from the standard pickle behavior (where it would be an error), but it</span>
+<span class="sd">  simplifies usage in the common case where the class is being used to hold</span>
+<span class="sd">  histograms, and its methods are entirely concerned with filling the</span>
+<span class="sd">  histograms.</span>
+
+<span class="sd">* When restoring a reference to a ROOT object, the default behavior</span>
+<span class="sd">  is to not read the ROOT object itself, but instead to create a proxy. The</span>
+<span class="sd">  ROOT object will then be read the first time the proxy is accessed. This can</span>
+<span class="sd">  help significantly with time and memory usage if you&#39;re only accessing a</span>
+<span class="sd">  small fraction of the ROOT objects, but it does mean that you need to keep</span>
+<span class="sd">  the ROOT file open. Pass use_proxy=0 to disable this behavior.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">cStringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">cPickle</span>
+<span class="kn">import</span> <span class="nn">ROOT</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">log</span><span class="p">;</span> <span class="n">log</span> <span class="o">=</span> <span class="n">log</span><span class="p">[</span><span class="n">__name__</span><span class="p">]</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">root_open</span>
+<span class="kn">from</span> <span class="nn">..context</span> <span class="kn">import</span> <span class="n">preserve_current_directory</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;dump&#39;</span><span class="p">,</span>
+    <span class="s">&#39;load&#39;</span><span class="p">,</span>
+    <span class="s">&#39;compat_hooks&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="n">_compat_hooks</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">xdict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">xserial</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+<span class="c"># Argh!  We can&#39;t store NULs in TObjStrings.</span>
+<span class="c"># But pickle protocols &gt; 0 are binary protocols, and will get corrupted</span>
+<span class="c"># if we truncate at a NUL.</span>
+<span class="c"># So, when we save the pickle data, make the mappings:</span>
+<span class="c">#  0x00 -&gt; 0xff 0x01</span>
+<span class="c">#  0xff -&gt; 0xff 0xfe</span>
+
+
+<span class="k">def</span> <span class="nf">_protect</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\377</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\377\376</span><span class="s">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\000</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\377\001</span><span class="s">&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_restore</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\377\001</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\000</span><span class="s">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\377\376</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\377</span><span class="s">&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">IO_Wrapper</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reopen</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__s</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_protect</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__s</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">readline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__s</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">getvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__s</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">setvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__s</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">_restore</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__s</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="k">return</span>
+
+
+<span class="k">class</span> <span class="nc">Pickler</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">file</span><span class="p">,</span> <span class="n">proto</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a root pickler.</span>
+<span class="sd">        `file` should be a ROOT TFile. `proto` is the python pickle protocol</span>
+<span class="sd">        version to use.  The python part will be pickled to a ROOT</span>
+<span class="sd">        TObjString called _pickle; it will contain references to the</span>
+<span class="sd">        ROOT objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__file</span> <span class="o">=</span> <span class="nb">file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__keys</span> <span class="o">=</span> <span class="nb">file</span><span class="o">.</span><span class="n">GetListOfKeys</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__io</span> <span class="o">=</span> <span class="n">IO_Wrapper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pickle</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">Pickler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__io</span><span class="p">,</span> <span class="n">proto</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pickle</span><span class="o">.</span><span class="n">persistent_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_persistent_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pmap</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write a pickled representation of o to the open TFile.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;_pickle&#39;</span>
+        <span class="k">with</span> <span class="n">preserve_current_directory</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__file</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TObjString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__io</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__io</span><span class="o">.</span><span class="n">reopen</span><span class="p">()</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__file</span><span class="o">.</span><span class="n">GetFile</span><span class="p">()</span><span class="o">.</span><span class="n">Flush</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__pmap</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">clear_memo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clears the pickler&#39;s internal memo.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pickle</span><span class="o">.</span><span class="n">memo</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_persistent_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s">&#39;_ROOT_Proxy__obj&#39;</span><span class="p">):</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">_ROOT_Proxy__obj</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TObject</span><span class="p">):</span>
+            <span class="c"># Write the object, and return the resulting NAME;CYCLE.</span>
+            <span class="c"># We used to to this like this:</span>
+            <span class="c">#o.Write()</span>
+            <span class="c">#k = self.__file.GetKey(o.GetName())</span>
+            <span class="c">#pid = &quot;{0};{1:d}&quot;.format(k.GetName(), k.GetCycle())</span>
+            <span class="c"># It turns out, though, that destroying the python objects</span>
+            <span class="c"># referencing the TKeys is quite expensive (O(logN) where</span>
+            <span class="c"># N is the total number of pyroot objects?).  Although</span>
+            <span class="c"># we want to allow for the case of saving multiple objects</span>
+            <span class="c"># with the same name, the most common case is that the name</span>
+            <span class="c"># has not already been written to the file.  So we optimize</span>
+            <span class="c"># for that case, doing the key lookup before we write the</span>
+            <span class="c"># object, not after.  (Note further: GetKey() is very slow</span>
+            <span class="c"># if the key does not actually exist, as it does a linear</span>
+            <span class="c"># search of the key list.  We use FindObject instead for the</span>
+            <span class="c"># initial lookup, which is a hashed lookup, but it is not</span>
+            <span class="c"># guaranteed to find the highest cycle.  So if we do</span>
+            <span class="c"># find an existing key, we need to look up again using GetKey.</span>
+            <span class="n">nm</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__keys</span><span class="o">.</span><span class="n">FindObject</span><span class="p">(</span><span class="n">nm</span><span class="p">)</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">k</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__file</span><span class="o">.</span><span class="n">GetKey</span><span class="p">(</span><span class="n">nm</span><span class="p">)</span>
+                <span class="n">pid</span> <span class="o">=</span> <span class="s">&#39;{0};{1:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nm</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">GetCycle</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pid</span> <span class="o">=</span> <span class="n">nm</span> <span class="o">+</span> <span class="s">&#39;;1&#39;</span>
+            <span class="k">return</span> <span class="n">pid</span>
+
+
+<span class="k">class</span> <span class="nc">ROOT_Proxy</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">pid</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__f</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pid</span> <span class="o">=</span> <span class="n">pid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__o</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__o</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__f</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__pid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__o</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__module__</span> <span class="o">!=</span> <span class="s">&#39;ROOT&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__o</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__module__</span> <span class="o">=</span> <span class="s">&#39;ROOT&#39;</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__o</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__obj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__o</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__f</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__pid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__o</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__module__</span> <span class="o">!=</span> <span class="s">&#39;ROOT&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__o</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__module__</span> <span class="o">=</span> <span class="s">&#39;ROOT&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__o</span>
+
+
+<span class="k">class</span> <span class="nc">Unpickler</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">file</span><span class="p">,</span> <span class="n">use_proxy</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">use_hash</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a ROOT unpickler.</span>
+<span class="sd">        `file` should be a ROOT TFile.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">global</span> <span class="n">xserial</span>
+        <span class="n">xserial</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__use_proxy</span> <span class="o">=</span> <span class="n">use_proxy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__file</span> <span class="o">=</span> <span class="nb">file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__io</span> <span class="o">=</span> <span class="n">IO_Wrapper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__unpickle</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">Unpickler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__io</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__unpickle</span><span class="o">.</span><span class="n">persistent_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_persistent_load</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__unpickle</span><span class="o">.</span><span class="n">find_global</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__serial</span> <span class="o">=</span> <span class="s">&#39;{0:d}-&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xserial</span><span class="p">)</span>
+        <span class="n">xdict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__serial</span><span class="p">]</span> <span class="o">=</span> <span class="nb">file</span>
+
+        <span class="k">if</span> <span class="n">use_hash</span><span class="p">:</span>
+            <span class="n">htab</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">ctab</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">file</span><span class="o">.</span><span class="n">GetListOfKeys</span><span class="p">():</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+                <span class="n">cy</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">GetCycle</span><span class="p">()</span>
+                <span class="n">htab</span><span class="p">[(</span><span class="n">nm</span><span class="p">,</span> <span class="n">cy</span><span class="p">)]</span> <span class="o">=</span> <span class="n">k</span>
+                <span class="k">if</span> <span class="n">cy</span> <span class="o">&gt;</span> <span class="n">ctab</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nm</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+                    <span class="n">ctab</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">cy</span>
+                    <span class="n">htab</span><span class="p">[(</span><span class="n">nm</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)]</span> <span class="o">=</span> <span class="n">k</span>
+            <span class="nb">file</span><span class="o">.</span><span class="n">_htab</span> <span class="o">=</span> <span class="n">htab</span>
+            <span class="n">oget</span> <span class="o">=</span> <span class="nb">file</span><span class="o">.</span><span class="n">Get</span>
+
+            <span class="k">def</span> <span class="nf">xget</span><span class="p">(</span><span class="n">nm0</span><span class="p">):</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">nm0</span>
+                <span class="n">ipos</span> <span class="o">=</span> <span class="n">nm</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ipos</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">cy</span> <span class="o">=</span> <span class="n">nm</span><span class="p">[</span><span class="n">ipos</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">cy</span> <span class="o">==</span> <span class="s">&#39;*&#39;</span><span class="p">:</span>
+                        <span class="n">cy</span> <span class="o">=</span> <span class="mi">10000</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">cy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cy</span><span class="p">)</span>
+                    <span class="n">nm</span> <span class="o">=</span> <span class="n">nm</span><span class="p">[:</span><span class="n">ipos</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cy</span> <span class="o">=</span> <span class="mi">9999</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">htab</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">nm</span><span class="p">,</span> <span class="n">cy</span><span class="p">),</span> <span class="bp">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s">&quot;did&#39;t find {0} {1} {2}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nm</span><span class="p">,</span> <span class="n">cy</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">htab</span><span class="p">)))</span>
+                    <span class="k">return</span> <span class="n">oget</span><span class="p">(</span><span class="n">nm0</span><span class="p">)</span>
+                <span class="c">#ctx = ROOT.TDirectory.TContext (file)</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">ReadObj</span><span class="p">()</span>
+                <span class="c">#del ctx</span>
+                <span class="k">return</span> <span class="n">ret</span>
+            <span class="nb">file</span><span class="o">.</span><span class="n">Get</span> <span class="o">=</span> <span class="n">xget</span>
+
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read a pickled object representation from the open file.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;_pickle&#39;</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">_compat_hooks</span><span class="p">:</span>
+            <span class="n">save</span> <span class="o">=</span> <span class="n">_compat_hooks</span><span class="p">[</span><span class="mi">0</span><span class="p">]()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__n</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__file</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s">&#39;;{0:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__io</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">GetName</span><span class="p">())</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__unpickle</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__io</span><span class="o">.</span><span class="n">reopen</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">_compat_hooks</span><span class="p">:</span>
+                <span class="n">save</span> <span class="o">=</span> <span class="n">_compat_hooks</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">save</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">o</span>
+
+    <span class="k">def</span> <span class="nf">_persistent_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pid</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__use_proxy</span><span class="p">:</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="n">ROOT_Proxy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__file</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__file</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;load {0} {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">o</span><span class="p">))</span>
+        <span class="n">xdict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__serial</span> <span class="o">+</span> <span class="n">pid</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span>
+        <span class="k">return</span> <span class="n">o</span>
+
+    <span class="k">def</span> <span class="nf">_find_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">__import__</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+                <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Making dummy module {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">module</span><span class="p">))</span>
+
+                <span class="k">class</span> <span class="nc">DummyModule</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                <span class="n">mod</span> <span class="o">=</span> <span class="n">DummyModule</span><span class="p">()</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">]</span> <span class="o">=</span> <span class="n">mod</span>
+            <span class="n">klass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">klass</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Making dummy class {0}.{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">]</span>
+
+            <span class="k">class</span> <span class="nc">Dummy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+                <span class="k">pass</span>
+
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">Dummy</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Dummy</span>
+
+
+<span class="k">def</span> <span class="nf">compat_hooks</span><span class="p">(</span><span class="n">hooks</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set compatibility hooks.</span>
+<span class="sd">    If this is set, then hooks[0] is called before loading, and hooks[1] is</span>
+<span class="sd">    called after loading.  hooks[1] is called with the return value of hooks[0]</span>
+<span class="sd">    as an argument.  This is useful for backwards compatibility in some</span>
+<span class="sd">    situations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_compat_hooks</span>
+    <span class="n">_compat_hooks</span> <span class="o">=</span> <span class="n">hooks</span>
+
+
+<div class="viewcode-block" id="dump"><a class="viewcode-back" href="../../../reference/generated/rootpy.io.pickler.dump.html#rootpy.io.pickler.dump">[docs]</a><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">proto</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dump object O to the ROOT TFile `f`.</span>
+
+<span class="sd">    `f` may be an open ROOT file or directory, or a string path to an existing</span>
+<span class="sd">    ROOT file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">root_open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&#39;recreate&#39;</span><span class="p">)</span>
+        <span class="n">own_file</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">own_file</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">Pickler</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">proto</span><span class="p">)</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">own_file</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ret</span>
+
+</div>
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../../reference/generated/rootpy.io.pickler.load.html#rootpy.io.pickler.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">use_proxy</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load an object from the ROOT TFile `f`.</span>
+
+<span class="sd">    `f` may be an open ROOT file or directory, or a string path to an existing</span>
+<span class="sd">    ROOT file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">root_open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Unpickler</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">use_proxy</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../io.html" >rootpy.io</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+    &copy; Copyright 2013, rootpy developers.
+</div>
+
+
+
+<!-- Google Analytics Code -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39364267-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+
+    <title>rootpy.root2hdf5 &mdash; rootpy dev documentation</title>
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+
+
+    
+    <link rel="stylesheet" href="../../_static/rtd.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/searchtools.js"></script>
+    <link rel="top" title="rootpy dev documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for rootpy.root2hdf5</h1><div class="highlight"><pre>
+<span class="c"># Copyright 2012 the rootpy developers</span>
+<span class="c"># distributed under the terms of the GNU General Public License</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module handles conversion of ROOT&#39;s TFile and</span>
+<span class="sd">contained TTrees into HDF5 format with PyTables</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">tables</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">root_numpy</span> <span class="kn">import</span> <span class="n">tree2rec</span><span class="p">,</span> <span class="n">RootNumpyUnconvertibleWarning</span>
+<span class="kn">from</span> <span class="nn">numpy.lib</span> <span class="kn">import</span> <span class="n">recfunctions</span>
+
+<span class="kn">from</span> <span class="nn">.io</span> <span class="kn">import</span> <span class="n">root_open</span><span class="p">,</span> <span class="n">TemporaryFile</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">log</span><span class="p">;</span> <span class="n">log</span> <span class="o">=</span> <span class="n">log</span><span class="p">[</span><span class="n">__name__</span><span class="p">]</span>
+<span class="kn">from</span> <span class="nn">.extern.progressbar</span> <span class="kn">import</span> <span class="n">ProgressBar</span><span class="p">,</span> <span class="n">Bar</span><span class="p">,</span> <span class="n">ETA</span><span class="p">,</span> <span class="n">Percentage</span>
+<span class="kn">from</span> <span class="nn">.logger.utils</span> <span class="kn">import</span> <span class="n">check_tty</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;root2hdf5&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_drop_object_col</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="c"># ignore columns of type `object` since PyTables does not support these</span>
+    <span class="k">if</span> <span class="n">rec</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">hasobject</span><span class="p">:</span>
+        <span class="n">object_fields</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">fields</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">rec</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fields</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s">&#39;O&#39;</span><span class="p">:</span>
+                <span class="n">object_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s">&quot;ignoring unsupported object branch &#39;{0}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">name</span><span class="p">))</span>
+        <span class="c"># NumPy 1.7.1: TypeError: Cannot change data-type for object array.</span>
+        <span class="c">#return rec[non_object_fields]</span>
+        <span class="k">if</span> <span class="n">object_fields</span><span class="p">:</span>
+            <span class="n">rec</span> <span class="o">=</span> <span class="n">recfunctions</span><span class="o">.</span><span class="n">rec_drop_fields</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="n">object_fields</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rec</span>
+
+
+<div class="viewcode-block" id="root2hdf5"><a class="viewcode-back" href="../../reference/generated/rootpy.root2hdf5.root2hdf5.html#rootpy.root2hdf5.root2hdf5">[docs]</a><span class="k">def</span> <span class="nf">root2hdf5</span><span class="p">(</span><span class="n">rfile</span><span class="p">,</span> <span class="n">hfile</span><span class="p">,</span> <span class="n">rpath</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+              <span class="n">entries</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">userfunc</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+              <span class="n">selection</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+              <span class="n">show_progress</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+    <span class="n">show_progress</span> <span class="o">=</span> <span class="n">show_progress</span> <span class="ow">and</span> <span class="n">check_tty</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+        <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s">&#39; &#39;</span><span class="p">,</span> <span class="n">Bar</span><span class="p">(),</span> <span class="s">&#39; &#39;</span><span class="p">,</span> <span class="n">ETA</span><span class="p">()]</span>
+
+    <span class="n">own_rootfile</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rfile</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="n">rfile</span> <span class="o">=</span> <span class="n">root_open</span><span class="p">(</span><span class="n">rfile</span><span class="p">)</span>
+        <span class="n">own_rootfile</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="n">own_h5file</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hfile</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="n">hfile</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">openFile</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">hfile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&quot;w&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Data&quot;</span><span class="p">)</span>
+        <span class="n">own_h5file</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">treenames</span> <span class="ow">in</span> <span class="n">rfile</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span>
+            <span class="n">rpath</span><span class="p">,</span> <span class="n">class_pattern</span><span class="o">=</span><span class="s">&#39;TTree&#39;</span><span class="p">):</span>
+
+        <span class="c"># skip root</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dirpath</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">treenames</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c"># skip directories w/o trees or subdirs</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dirnames</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">treenames</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">where_group</span> <span class="o">=</span> <span class="s">&#39;/&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dirpath</span><span class="p">)</span>
+        <span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">dirpath</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">current_dir</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">hfile</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">hfile</span><span class="o">.</span><span class="n">createGroup</span><span class="p">(</span><span class="n">where_group</span><span class="p">,</span> <span class="n">current_dir</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">ntrees</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">treenames</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s">&quot;Will convert {0:d} tree{1} in this directory&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">ntrees</span><span class="p">,</span> <span class="s">&#39;s&#39;</span> <span class="k">if</span> <span class="n">ntrees</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">treename</span> <span class="ow">in</span> <span class="n">treenames</span><span class="p">:</span>
+
+            <span class="n">input_tree</span> <span class="o">=</span> <span class="n">rfile</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">treename</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">userfunc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">tmp_file</span> <span class="o">=</span> <span class="n">TemporaryFile</span><span class="p">()</span>
+                <span class="c"># call user-defined function on tree and get output trees</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Calling user function on tree &#39;{0}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">input_tree</span><span class="o">.</span><span class="n">GetName</span><span class="p">()))</span>
+                <span class="n">trees</span> <span class="o">=</span> <span class="n">userfunc</span><span class="p">(</span><span class="n">input_tree</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">trees</span> <span class="o">=</span> <span class="p">[</span><span class="n">trees</span><span class="p">]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">trees</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_tree</span><span class="p">]</span>
+                <span class="n">tmp_file</span> <span class="o">=</span> <span class="bp">None</span>
+
+            <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Converting tree &#39;{0}&#39; with {1:d} entries ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">tree</span><span class="o">.</span><span class="n">GetName</span><span class="p">(),</span>
+                    <span class="n">tree</span><span class="o">.</span><span class="n">GetEntries</span><span class="p">()))</span>
+
+                <span class="k">if</span> <span class="n">tree</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s">&quot;skipping tree &#39;{0}&#39; that already exists &quot;</span>
+                        <span class="s">&quot;in the output file&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">GetName</span><span class="p">()))</span>
+                    <span class="k">continue</span>
+
+                <span class="n">total_entries</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">GetEntries</span><span class="p">()</span>
+                <span class="n">pbar</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="k">if</span> <span class="n">show_progress</span> <span class="ow">and</span> <span class="n">total_entries</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">widgets</span><span class="p">,</span> <span class="n">maxval</span><span class="o">=</span><span class="n">total_entries</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">entries</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c"># read the entire tree</span>
+                    <span class="k">if</span> <span class="n">pbar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="n">pbar</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                    <span class="n">recarray</span> <span class="o">=</span> <span class="n">tree2rec</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">selection</span><span class="p">)</span>
+                    <span class="n">recarray</span> <span class="o">=</span> <span class="n">_drop_object_col</span><span class="p">(</span><span class="n">recarray</span><span class="p">)</span>
+                    <span class="n">table</span> <span class="o">=</span> <span class="n">hfile</span><span class="o">.</span><span class="n">createTable</span><span class="p">(</span>
+                        <span class="n">group</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">GetName</span><span class="p">(),</span>
+                        <span class="n">recarray</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">GetTitle</span><span class="p">())</span>
+                    <span class="c"># flush data in the table</span>
+                    <span class="n">table</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                    <span class="c"># flush all pending data</span>
+                    <span class="n">hfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c"># read the tree in chunks</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">total_entries</span> <span class="ow">or</span> <span class="n">start</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                                <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span>
+                                    <span class="s">&quot;ignore&quot;</span><span class="p">,</span>
+                                    <span class="n">RootNumpyUnconvertibleWarning</span><span class="p">)</span>
+                                <span class="n">recarray</span> <span class="o">=</span> <span class="n">tree2rec</span><span class="p">(</span>
+                                    <span class="n">tree</span><span class="p">,</span>
+                                    <span class="n">selection</span><span class="o">=</span><span class="n">selection</span><span class="p">,</span>
+                                    <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+                                    <span class="n">stop</span><span class="o">=</span><span class="n">start</span> <span class="o">+</span> <span class="n">entries</span><span class="p">)</span>
+                            <span class="n">recarray</span> <span class="o">=</span> <span class="n">_drop_object_col</span><span class="p">(</span><span class="n">recarray</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                            <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">recarray</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">recarray</span> <span class="o">=</span> <span class="n">tree2rec</span><span class="p">(</span>
+                                <span class="n">tree</span><span class="p">,</span>
+                                <span class="n">selection</span><span class="o">=</span><span class="n">selection</span><span class="p">,</span>
+                                <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+                                <span class="n">stop</span><span class="o">=</span><span class="n">start</span> <span class="o">+</span> <span class="n">entries</span><span class="p">)</span>
+                            <span class="n">recarray</span> <span class="o">=</span> <span class="n">_drop_object_col</span><span class="p">(</span><span class="n">recarray</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">pbar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                                <span class="c"># start after any output from root_numpy</span>
+                                <span class="n">pbar</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                            <span class="n">table</span> <span class="o">=</span> <span class="n">hfile</span><span class="o">.</span><span class="n">createTable</span><span class="p">(</span>
+                                <span class="n">group</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">GetName</span><span class="p">(),</span>
+                                <span class="n">recarray</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">GetTitle</span><span class="p">())</span>
+                        <span class="n">start</span> <span class="o">+=</span> <span class="n">entries</span>
+                        <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">total_entries</span> <span class="ow">and</span> <span class="n">pbar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                            <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+                        <span class="c"># flush data in the table</span>
+                        <span class="n">table</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                        <span class="c"># flush all pending data</span>
+                        <span class="n">hfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">pbar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">pbar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+            <span class="n">input_tree</span><span class="o">.</span><span class="n">Delete</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">userfunc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+                    <span class="n">tree</span><span class="o">.</span><span class="n">Delete</span><span class="p">()</span>
+                <span class="n">tmp_file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">own_h5file</span><span class="p">:</span>
+        <span class="n">hfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">own_rootfile</span><span class="p">:</span>
+        <span class="n">rfile</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+</div>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="kn">import</span> <span class="nn">rootpy</span>
+    <span class="kn">from</span> <span class="nn">rootpy.extern.argparse</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">ArgumentParser</span><span class="p">,</span>
+        <span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span> <span class="n">RawTextHelpFormatter</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">formatter_class</span><span class="p">(</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+                          <span class="n">RawTextHelpFormatter</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">formatter_class</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;--version&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&#39;version&#39;</span><span class="p">,</span>
+                        <span class="n">version</span><span class="o">=</span><span class="n">rootpy</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s">&quot;show the version number and exit&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-n&#39;</span><span class="p">,</span> <span class="s">&#39;--entries&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s">&quot;number of entries to read at once&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-f&#39;</span><span class="p">,</span> <span class="s">&#39;--force&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s">&quot;overwrite existing output files&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-u&#39;</span><span class="p">,</span> <span class="s">&#39;--update&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s">&quot;update existing output files&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;--ext&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&#39;h5&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s">&quot;output file extension&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-c&#39;</span><span class="p">,</span> <span class="s">&#39;--complevel&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                        <span class="n">choices</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s">&quot;compression level&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-l&#39;</span><span class="p">,</span> <span class="s">&#39;--complib&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&#39;zlib&#39;</span><span class="p">,</span>
+                        <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;zlib&#39;</span><span class="p">,</span> <span class="s">&#39;lzo&#39;</span><span class="p">,</span> <span class="s">&#39;bzip2&#39;</span><span class="p">,</span> <span class="s">&#39;blosc&#39;</span><span class="p">),</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s">&quot;compression algorithm&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-s&#39;</span><span class="p">,</span> <span class="s">&#39;--selection&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s">&quot;apply a selection on each &quot;</span>
+                             <span class="s">&quot;tree with a cut expression&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&#39;--script&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;Python script containing a function with the same name </span><span class="se">\n</span><span class="s">&quot;</span>
+             <span class="s">&quot;that will be called on each tree and must return a tree or </span><span class="se">\n</span><span class="s">&quot;</span>
+             <span class="s">&quot;list of trees that will be converted instead of the </span><span class="se">\n</span><span class="s">&quot;</span>
+             <span class="s">&quot;original tree&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-q&#39;</span><span class="p">,</span> <span class="s">&#39;--quiet&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s">&quot;suppress all warnings&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;--no-progress-bar&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s">&quot;do not show the progress bar&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;files&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s">&#39;+&#39;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">rootpy</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">basic_config_colorized</span><span class="p">()</span>
+    <span class="kn">import</span> <span class="nn">logging</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="s">&#39;captureWarnings&#39;</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">captureWarnings</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">formatwarning</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;{0}: {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">category</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+    <span class="n">warnings</span><span class="o">.</span><span class="n">formatwarning</span> <span class="o">=</span> <span class="n">formatwarning</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">ext</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span>
+            <span class="s">&quot;ignore&quot;</span><span class="p">,</span>
+            <span class="n">RootNumpyUnconvertibleWarning</span><span class="p">)</span>
+
+    <span class="n">userfunc</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">script</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="c"># get user-defined function</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">exec</span><span class="p">(</span><span class="nb">compile</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">script</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">args</span><span class="o">.</span><span class="n">script</span><span class="p">,</span> <span class="s">&#39;exec&#39;</span><span class="p">),</span>
+                 <span class="nb">globals</span><span class="p">(),</span> <span class="nb">locals</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&#39;Could not open script {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">script</span><span class="p">))</span>
+        <span class="n">funcname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">script</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">userfunc</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()[</span><span class="n">funcname</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+                <span class="s">&quot;Could not find the function &#39;{0}&#39; in the script {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">funcname</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">script</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">inputname</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+        <span class="n">outputname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">inputname</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">ext</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outputname</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">force</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">update</span><span class="p">):</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+                <span class="s">&quot;Output {0} already exists. &quot;</span>
+                <span class="s">&quot;Use the --force option to overwrite it&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputname</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">rootfile</span> <span class="o">=</span> <span class="n">root_open</span><span class="p">(</span><span class="n">inputname</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&quot;Could not open {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inputname</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">complevel</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">filters</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Filters</span><span class="p">(</span><span class="n">complib</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">complib</span><span class="p">,</span>
+                                         <span class="n">complevel</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">complevel</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">filters</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">hd5file</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">openFile</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">outputname</span><span class="p">,</span>
+                                      <span class="n">mode</span><span class="o">=</span><span class="s">&#39;a&#39;</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">update</span> <span class="k">else</span> <span class="s">&#39;w&#39;</span><span class="p">,</span>
+                                      <span class="n">title</span><span class="o">=</span><span class="s">&#39;Data&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&quot;Could not create {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputname</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Converting {0} ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inputname</span><span class="p">))</span>
+            <span class="n">root2hdf5</span><span class="p">(</span><span class="n">rootfile</span><span class="p">,</span> <span class="n">hd5file</span><span class="p">,</span>
+                      <span class="n">entries</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">entries</span><span class="p">,</span>
+                      <span class="n">userfunc</span><span class="o">=</span><span class="n">userfunc</span><span class="p">,</span>
+                      <span class="n">selection</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">selection</span><span class="p">,</span>
+                      <span class="n">show_progress</span><span class="o">=</span><span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_progress_bar</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Created {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputname</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Caught Ctrl-c ... cleaning up&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">outputname</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">hd5file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">rootfile</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+    &copy; Copyright 2013, rootpy developers.
+</div>
+
+
+
+<!-- Google Analytics Code -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39364267-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,18 @@
+
+
+.. _example_array_tree_to_array.py:
+
+
+=================================
+Convert a tree into a NumPy array
+=================================
+
+This example demonstrates how to convert a Tree into a NumPy ndarray or
+recarray.
+
+
+**Python source code:** :download:`tree_to_array.py <tree_to_array.py>`
+
+.. literalinclude:: tree_to_array.py
+    :lines: 11-
+    

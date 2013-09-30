@@ -1,0 +1,17 @@
+
+
+.. _example_tree_simple.py:
+
+
+=====================
+A simple Tree example
+=====================
+
+This example demonstrates how to create a simple tree.
+
+
+**Python source code:** :download:`simple.py <simple.py>`
+
+.. literalinclude:: simple.py
+    :lines: 10-
+    

@@ -1,0 +1,484 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+
+    <title>rootpy.plotting.Hist &mdash; rootpy dev documentation</title>
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+
+
+    
+    <link rel="stylesheet" href="../../_static/rtd.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/searchtools.js"></script>
+    <link rel="top" title="rootpy dev documentation" href="../../index.html" />
+    <link rel="up" title="rootpy.plotting: Plotting" href="../plotting.html" />
+    <link rel="next" title="rootpy.plotting.Hist2D" href="rootpy.plotting.Hist2D.html" />
+    <link rel="prev" title="rootpy.plotting.set_style" href="rootpy.plotting.set_style.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rootpy.plotting.Hist2D.html" title="rootpy.plotting.Hist2D"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rootpy.plotting.set_style.html" title="rootpy.plotting.set_style"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../plotting.html" accesskey="U"><tt class="docutils literal"><span class="pre">rootpy.plotting</span></tt>: Plotting</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="rootpy-plotting-hist">
+<h1>rootpy.plotting.Hist<a class="headerlink" href="#rootpy-plotting-hist" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="rootpy.plotting.Hist">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.</tt><tt class="descname">Hist</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a 1-dimensional Hist object which inherits from the associated
+ROOT.TH1* class (where * is C, S, I, F, or D depending on the type
+keyword argument)</p>
+<dl class="method">
+<dt id="rootpy.plotting.Hist.Draw">
+<tt class="descname">Draw</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.Draw" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>args</strong> : positional arguments</p>
+<blockquote>
+<div><p>Positional arguments are passed directly to ROOT&#8217;s Draw</p>
+</div></blockquote>
+<p><strong>kwargs</strong> : keyword arguments</p>
+<blockquote>
+<div><p>If keyword arguments are present, then a clone is drawn instead
+with DrawCopy, where the name, title, and style attributes are
+taken from <tt class="docutils literal"><span class="pre">kwargs</span></tt>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>If ``kwargs`` is not empty and a clone is drawn, then the clone is</strong> :</p>
+<p class="last"><strong>returned, otherwise None is returned.</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.DrawCopy">
+<tt class="descname">DrawCopy</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.DrawCopy" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>args</strong> : positional arguments</p>
+<blockquote>
+<div><p>Positional arguments are passed directly to ROOT&#8217;s Draw</p>
+</div></blockquote>
+<p><strong>kwargs</strong> : keyword arguments</p>
+<blockquote>
+<div><p>The name, title, and style attributes of the clone are
+taken from <tt class="docutils literal"><span class="pre">kwargs</span></tt>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>The clone.</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.GetFillColor">
+<tt class="descname">GetFillColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.GetFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.GetFillStyle">
+<tt class="descname">GetFillStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.GetFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.GetLineColor">
+<tt class="descname">GetLineColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.GetLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.GetLineStyle">
+<tt class="descname">GetLineStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.GetLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.GetMarkerColor">
+<tt class="descname">GetMarkerColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.GetMarkerColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.GetMarkerStyle">
+<tt class="descname">GetMarkerStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.GetMarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.SetColor">
+<tt class="descname">SetColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.SetColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>Set all color attributes with one method call.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.SetFillColor">
+<tt class="descname">SetFillColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.SetFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.SetFillStyle">
+<tt class="descname">SetFillStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.SetFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any fill style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.FillStyle</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.SetLineColor">
+<tt class="descname">SetLineColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.SetLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.SetLineStyle">
+<tt class="descname">SetLineStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.SetLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any line style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.LineStyle</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.SetMarkerColor">
+<tt class="descname">SetMarkerColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.SetMarkerColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.SetMarkerStyle">
+<tt class="descname">SetMarkerStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.SetMarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any marker style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.MarkerStyle</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.decorate">
+<tt class="descname">decorate</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.decorate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply style options to a Plottable object.</p>
+<p>Returns a reference to self.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.fill_array">
+<tt class="descname">fill_array</tt><big>(</big><em>array</em>, <em>weights=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.fill_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill this histogram with a NumPy array</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.get_sum_w2">
+<tt class="descname">get_sum_w2</tt><big>(</big><em>x</em>, <em>y=0</em>, <em>z=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.get_sum_w2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the true number of entries in the bin weighted by w^2</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.merge_bins">
+<tt class="descname">merge_bins</tt><big>(</big><em>bin_ranges</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.merge_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge bins in bin ranges</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>bin_ranges</strong> : list of tuples</p>
+<blockquote>
+<div><p>A list of tuples of bin indices for each bin range to be merged
+into one bin.</p>
+</div></blockquote>
+<p><strong>axis</strong> : int (default=1)</p>
+<blockquote>
+<div><p>The integer identifying the axis to merge bins along.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>hist</strong> : TH1</p>
+<blockquote class="last">
+<div><p>The rebinned histogram.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Merge the overflow bins into the first and last real bins:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">newhist</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">merge_bins</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.new_binning_template">
+<tt class="descname">new_binning_template</tt><big>(</big><em>binning</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.new_binning_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new empty histogram with the binning modified along the
+specified axis</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.overflow">
+<tt class="descname">overflow</tt><big>(</big><em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.overflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the overflow for the given axis.</p>
+<p>Depending on the dimension of the histogram, may return an array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.quantiles">
+<tt class="descname">quantiles</tt><big>(</big><em>quantiles</em>, <em>axis=0</em>, <em>strict=False</em>, <em>recompute_integral=False</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.quantiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the quantiles of this histogram.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>quantiles</strong> : list or int</p>
+<blockquote>
+<div><p>A list of cumulative probabilities or an integer used to determine
+equally spaced values between 0 and 1 (inclusive).</p>
+</div></blockquote>
+<p><strong>axis</strong> : int, optional (default=0)</p>
+<blockquote>
+<div><p>The axis to compute the quantiles along. 2D and 3D histograms are
+first projected along the desired axis before computing the
+quantiles.</p>
+</div></blockquote>
+<p><strong>strict</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>If True, then return the sorted unique quantiles corresponding
+exactly to bin edges of this histogram.</p>
+</div></blockquote>
+<p><strong>recompute_integral</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>If this histogram was filled with SetBinContent instead of Fill,
+then the integral must be computed before calculating the
+quantiles.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>output</strong> : list or numpy array</p>
+<blockquote class="last">
+<div><p>If NumPy is importable then an array of the quantiles is returned,
+otherwise a list is returned.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.rebinned">
+<tt class="descname">rebinned</tt><big>(</big><em>bins</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.rebinned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new rebinned histogram</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>bins</strong> : int, tuple, or iterable</p>
+<blockquote>
+<div><p>If <tt class="docutils literal"><span class="pre">bins</span></tt> is an int, then return a histogram that is rebinned by
+grouping N=``bins`` bins together along the axis <tt class="docutils literal"><span class="pre">axis</span></tt>.
+If <tt class="docutils literal"><span class="pre">bins</span></tt> is a tuple, then it must contain the same number of
+elements as there are dimensions of this histogram and each element
+will be used to rebin along the associated axis.
+If <tt class="docutils literal"><span class="pre">bins</span></tt> is another iterable, then it will define the bin
+edges along the axis <tt class="docutils literal"><span class="pre">axis</span></tt> in the new rebinned histogram.</p>
+</div></blockquote>
+<p><strong>axis</strong> : int, optional (default=0)</p>
+<blockquote>
+<div><p>The axis to rebin along.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>The rebinned histogram</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.set_sum_w2">
+<tt class="descname">set_sum_w2</tt><big>(</big><em>w</em>, <em>x</em>, <em>y=0</em>, <em>z=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.set_sum_w2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the true number of entries in the bin weighted by w^2</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.underflow">
+<tt class="descname">underflow</tt><big>(</big><em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.underflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the underflow for the given axis.</p>
+<p>Depending on the dimension of the histogram, may return an array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist.uniform">
+<tt class="descname">uniform</tt><big>(</big><em>axis=None</em>, <em>precision=1e-07</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist.uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the binning is uniform along the specified axis.
+If axis is None (the default), then return True if the binning is
+uniform along all axes. Otherwise return False.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>axis</strong> : int (default=None)</p>
+<blockquote>
+<div><p>Axis along which to check if the binning is uniform. If None,
+then check all axes.</p>
+</div></blockquote>
+<p><strong>precision</strong> : float (default=1E-7)</p>
+<blockquote>
+<div><p>The threshold below which differences in bin widths are ignored and
+treated as equal.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>True if the binning is uniform, otherwise False.</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="rootpy.plotting.set_style.html"
+                        title="previous chapter">rootpy.plotting.set_style</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="rootpy.plotting.Hist2D.html"
+                        title="next chapter">rootpy.plotting.Hist2D</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/reference/generated/rootpy.plotting.Hist.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rootpy.plotting.Hist2D.html" title="rootpy.plotting.Hist2D"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="rootpy.plotting.set_style.html" title="rootpy.plotting.set_style"
+             >previous</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../plotting.html" ><tt class="docutils literal"><span class="pre">rootpy.plotting</span></tt>: Plotting</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+    &copy; Copyright 2013, rootpy developers.
+</div>
+
+
+
+<!-- Google Analytics Code -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39364267-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+  </body>
+</html>

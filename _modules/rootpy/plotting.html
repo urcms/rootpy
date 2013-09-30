@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+
+    <title>rootpy.plotting &mdash; rootpy dev documentation</title>
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+
+
+    
+    <link rel="stylesheet" href="../../_static/rtd.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/searchtools.js"></script>
+    <link rel="top" title="rootpy dev documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for rootpy.plotting</h1><div class="highlight"><pre>
+<span class="c"># Copyright 2012 the rootpy developers</span>
+<span class="c"># distributed under the terms of the GNU General Public License</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">log</span><span class="p">;</span> <span class="n">log</span> <span class="o">=</span> <span class="n">log</span><span class="p">[</span><span class="n">__name__</span><span class="p">]</span>
+<span class="kn">from</span> <span class="nn">.hist</span> <span class="kn">import</span> <span class="n">Hist</span><span class="p">,</span> <span class="n">Hist1D</span><span class="p">,</span> <span class="n">Hist2D</span><span class="p">,</span> <span class="n">Hist3D</span><span class="p">,</span> <span class="n">Efficiency</span><span class="p">,</span> <span class="n">HistStack</span><span class="p">,</span> <span class="n">histogram</span>
+<span class="kn">from</span> <span class="nn">.graph</span> <span class="kn">import</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">Graph1D</span><span class="p">,</span> <span class="n">Graph2D</span>
+<span class="kn">from</span> <span class="nn">.profile</span> <span class="kn">import</span> <span class="n">Profile</span><span class="p">,</span> <span class="n">Profile1D</span><span class="p">,</span> <span class="n">Profile2D</span><span class="p">,</span> <span class="n">Profile3D</span>
+<span class="kn">from</span> <span class="nn">.func</span> <span class="kn">import</span> <span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">,</span> <span class="n">F3</span>
+<span class="kn">from</span> <span class="nn">.legend</span> <span class="kn">import</span> <span class="n">Legend</span>
+<span class="kn">from</span> <span class="nn">.canvas</span> <span class="kn">import</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">Pad</span>
+<span class="kn">from</span> <span class="nn">.style</span> <span class="kn">import</span> <span class="n">Style</span><span class="p">,</span> <span class="n">get_style</span><span class="p">,</span> <span class="n">set_style</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;Hist&#39;</span><span class="p">,</span> <span class="s">&#39;Hist1D&#39;</span><span class="p">,</span> <span class="s">&#39;Hist2D&#39;</span><span class="p">,</span> <span class="s">&#39;Hist3D&#39;</span><span class="p">,</span> <span class="s">&#39;HistStack&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Efficiency&#39;</span><span class="p">,</span> <span class="s">&#39;histogram&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Graph&#39;</span><span class="p">,</span> <span class="s">&#39;Graph1D&#39;</span><span class="p">,</span> <span class="s">&#39;Graph2D&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Profile&#39;</span><span class="p">,</span> <span class="s">&#39;Profile1D&#39;</span><span class="p">,</span> <span class="s">&#39;Profile2D&#39;</span><span class="p">,</span> <span class="s">&#39;Profile3D&#39;</span><span class="p">,</span>
+    <span class="s">&#39;F1&#39;</span><span class="p">,</span> <span class="s">&#39;F2&#39;</span><span class="p">,</span> <span class="s">&#39;F3&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Legend&#39;</span><span class="p">,</span> <span class="s">&#39;Canvas&#39;</span><span class="p">,</span> <span class="s">&#39;Pad&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Style&#39;</span><span class="p">,</span> <span class="s">&#39;get_style&#39;</span><span class="p">,</span> <span class="s">&#39;set_style&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+    &copy; Copyright 2013, rootpy developers.
+</div>
+
+
+
+<!-- Google Analytics Code -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39364267-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+  </body>
+</html>

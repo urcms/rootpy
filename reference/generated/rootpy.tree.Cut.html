@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+
+    <title>rootpy.tree.Cut &mdash; rootpy dev documentation</title>
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+
+
+    
+    <link rel="stylesheet" href="../../_static/rtd.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/searchtools.js"></script>
+    <link rel="top" title="rootpy dev documentation" href="../../index.html" />
+    <link rel="up" title="rootpy.tree: Trees" href="../tree.html" />
+    <link rel="next" title="rootpy.tree.Categories" href="rootpy.tree.Categories.html" />
+    <link rel="prev" title="rootpy.tree.TreeQueue" href="rootpy.tree.TreeQueue.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rootpy.tree.Categories.html" title="rootpy.tree.Categories"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rootpy.tree.TreeQueue.html" title="rootpy.tree.TreeQueue"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../tree.html" accesskey="U"><tt class="docutils literal"><span class="pre">rootpy.tree</span></tt>: Trees</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="rootpy-tree-cut">
+<h1>rootpy.tree.Cut<a class="headerlink" href="#rootpy-tree-cut" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="rootpy.tree.Cut">
+<em class="property">class </em><tt class="descclassname">rootpy.tree.</tt><tt class="descname">Cut</tt><big>(</big><em>cut=''</em>, <em>from_file=False</em><big>)</big><a class="headerlink" href="#rootpy.tree.Cut" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inherits from ROOT.TCut and implements logical operators</p>
+<dl class="method">
+<dt id="rootpy.tree.Cut.latex">
+<tt class="descname">latex</tt><big>(</big><big>)</big><a class="headerlink" href="#rootpy.tree.Cut.latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string representation for use in LaTeX</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.tree.Cut.replace">
+<tt class="descname">replace</tt><big>(</big><em>name</em>, <em>newname</em><big>)</big><a class="headerlink" href="#rootpy.tree.Cut.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace all occurrences of name with newname</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.tree.Cut.safe">
+<tt class="descname">safe</tt><big>(</big><em>parentheses=True</em><big>)</big><a class="headerlink" href="#rootpy.tree.Cut.safe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string representation with special characters
+replaced by safer characters for use in filenames for example.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.tree.Cut.where">
+<tt class="descname">where</tt><big>(</big><big>)</big><a class="headerlink" href="#rootpy.tree.Cut.where" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return string compatible with PyTable&#8217;s Table.where syntax:
+<a class="reference external" href="http://pytables.github.com/usersguide/libref.html#tables.Table.where">http://pytables.github.com/usersguide/libref.html#tables.Table.where</a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="rootpy.tree.TreeQueue.html"
+                        title="previous chapter">rootpy.tree.TreeQueue</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="rootpy.tree.Categories.html"
+                        title="next chapter">rootpy.tree.Categories</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/reference/generated/rootpy.tree.Cut.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rootpy.tree.Categories.html" title="rootpy.tree.Categories"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="rootpy.tree.TreeQueue.html" title="rootpy.tree.TreeQueue"
+             >previous</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../tree.html" ><tt class="docutils literal"><span class="pre">rootpy.tree</span></tt>: Trees</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+    &copy; Copyright 2013, rootpy developers.
+</div>
+
+
+
+<!-- Google Analytics Code -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39364267-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+  </body>
+</html>

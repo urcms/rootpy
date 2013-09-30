@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+
+    <title>ROOT.TFile made easy by rootpy &mdash; rootpy dev documentation</title>
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+
+
+    
+    <link rel="stylesheet" href="../../_static/rtd.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/searchtools.js"></script>
+    <link rel="top" title="rootpy dev documentation" href="../../index.html" />
+    <link rel="up" title="NumPy Interface" href="../index.html" />
+    <link rel="next" title="Fill histograms from arrays with automatic binning" href="../plotting/plot_autobinning.html" />
+    <link rel="prev" title="Convert a tree into a NumPy array" href="../array/tree_to_array.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../plotting/plot_autobinning.html" title="Fill histograms from arrays with automatic binning"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../array/tree_to_array.html" title="Convert a tree into a NumPy array"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">NumPy Interface</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="root-tfile-made-easy-by-rootpy">
+<span id="example-io-file-py"></span><h1>ROOT.TFile made easy by rootpy<a class="headerlink" href="#root-tfile-made-easy-by-rootpy" title="Permalink to this headline">¶</a></h1>
+<p>This example demonstrates how basic file operations are made easier in rootpy.</p>
+<p><strong>Python source code:</strong> <a class="reference download internal" href="../../_downloads/file.py"><tt class="xref download docutils literal"><span class="pre">file.py</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">rootpy</span>
+<span class="n">rootpy</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">basic_config_colorized</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">rootpy.io</span> <span class="kn">import</span> <span class="n">root_open</span><span class="p">,</span> <span class="n">DoesNotExist</span>
+<span class="kn">from</span> <span class="nn">rootpy.plotting</span> <span class="kn">import</span> <span class="n">Hist</span><span class="p">,</span> <span class="n">Hist2D</span>
+<span class="kn">from</span> <span class="nn">rootpy</span> <span class="kn">import</span> <span class="n">testdata</span>
+<span class="kn">from</span> <span class="nn">rootpy</span> <span class="kn">import</span> <span class="n">asrootpy</span>
+
+<span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">testdata</span><span class="o">.</span><span class="n">get_filepath</span><span class="p">(</span><span class="s">&#39;test_file_2.root&#39;</span><span class="p">),</span> <span class="s">&#39;data.root&#39;</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">root_open</span><span class="p">(</span><span class="s">&#39;data.root&#39;</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">f</span><span class="o">.</span><span class="n">a</span>
+<span class="k">print</span> <span class="n">f</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">b</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">f</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">d</span><span class="o">.</span><span class="n">e</span><span class="o">.</span><span class="n">f</span>
+<span class="k">except</span> <span class="ne">AttributeError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span>
+
+<span class="k">for</span> <span class="n">thing</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">walk</span><span class="p">():</span>
+    <span class="k">print</span> <span class="n">thing</span>
+
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c"># supports with statements</span>
+<span class="k">with</span> <span class="n">root_open</span><span class="p">(</span><span class="s">&#39;data.root&#39;</span><span class="p">,</span> <span class="s">&#39;update&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">f</span>
+
+    <span class="c"># write some histograms</span>
+    <span class="n">h1</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;h1&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">&#39;I&#39;</span><span class="p">)</span>
+    <span class="c"># variable bin widths</span>
+    <span class="n">h2</span> <span class="o">=</span> <span class="n">Hist2D</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">1000</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;h2&#39;</span><span class="p">)</span>
+
+    <span class="n">h1</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span>
+    <span class="n">h2</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span>
+<span class="c"># file is automatically closed after with statement</span>
+
+<span class="c"># retrieve the histograms previously saved</span>
+<span class="k">with</span> <span class="n">root_open</span><span class="p">(</span><span class="s">&#39;data.root&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+
+    <span class="n">h1</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">h1</span>
+    <span class="c"># or h1 = f.Get(&#39;h1&#39;)</span>
+    <span class="n">h2</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">h2</span>
+    <span class="c"># or h2 = f.Get(&#39;h2&#39;)</span>
+
+    <span class="c"># ROOT classes are automatically converted into</span>
+    <span class="c"># rootpy form when retrieved from a ROOT file as</span>
+    <span class="c"># long as their module was previously imported</span>
+    <span class="k">print</span> <span class="n">h1</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
+    <span class="k">print</span> <span class="n">h2</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
+
+    <span class="c"># you may also do this to convert an object into</span>
+    <span class="c"># rootpy form (again, assuming the relevant module</span>
+    <span class="c"># was previously imported)</span>
+    <span class="n">h1</span> <span class="o">=</span> <span class="n">asrootpy</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
+    <span class="c"># if it is already in rootpy form or if no rootpy form</span>
+    <span class="c"># exists then asrootpy does nothing</span>
+    <span class="k">print</span> <span class="n">h1</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="s">&#39;data.root&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../array/tree_to_array.html"
+                        title="previous chapter">Convert a tree into a NumPy array</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../plotting/plot_autobinning.html"
+                        title="next chapter">Fill histograms from arrays with automatic binning</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/auto_examples/io/file.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../plotting/plot_autobinning.html" title="Fill histograms from arrays with automatic binning"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../array/tree_to_array.html" title="Convert a tree into a NumPy array"
+             >previous</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../index.html" >NumPy Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+    &copy; Copyright 2013, rootpy developers.
+</div>
+
+
+
+<!-- Google Analytics Code -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39364267-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+  </body>
+</html>

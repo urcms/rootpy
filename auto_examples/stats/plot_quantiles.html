@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+
+    <title>Draw a Quantile-Quantile Plot and Confidence Band &mdash; rootpy dev documentation</title>
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+
+
+    
+    <link rel="stylesheet" href="../../_static/rtd.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/searchtools.js"></script>
+    <link rel="top" title="rootpy dev documentation" href="../../index.html" />
+    <link rel="up" title="NumPy Interface" href="../index.html" />
+    <link rel="next" title="The TreeChain class, a replacement for TChain" href="../tree/chain.html" />
+    <link rel="prev" title="Setting the plotting style" href="../plotting/plot_style.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../tree/chain.html" title="The TreeChain class, a replacement for TChain"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../plotting/plot_style.html" title="Setting the plotting style"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">NumPy Interface</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="draw-a-quantile-quantile-plot-and-confidence-band">
+<span id="example-stats-plot-quantiles-py"></span><h1>Draw a Quantile-Quantile Plot and Confidence Band<a class="headerlink" href="#draw-a-quantile-quantile-plot-and-confidence-band" title="Permalink to this headline">¶</a></h1>
+<p>This is an example of drawing a quantile-quantile plot with a
+confidential level (CL) band, originally by Zhiyi Liu, <a class="reference external" href="mailto:zhiyil&#37;&#52;&#48;fnal&#46;gov">zhiyil<span>&#64;</span>fnal<span>&#46;</span>gov</a></p>
+<img alt="../../_images/root_plot_quantiles_1.png" class="align-center" src="../../_images/root_plot_quantiles_1.png" />
+<p><strong>Python source code:</strong> <a class="reference download internal" href="../../_downloads/plot_quantiles.py"><tt class="xref download docutils literal"><span class="pre">plot_quantiles.py</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">ROOT</span>
+<span class="kn">from</span> <span class="nn">rootpy.interactive</span> <span class="kn">import</span> <span class="n">wait</span>
+<span class="kn">from</span> <span class="nn">rootpy.plotting</span> <span class="kn">import</span> <span class="n">Hist</span><span class="p">,</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">Legend</span>
+<span class="kn">from</span> <span class="nn">rootpy.stats.utils.quantiles</span> <span class="kn">import</span> <span class="n">qqgraph</span>
+
+<span class="n">ROOT</span><span class="o">.</span><span class="n">gROOT</span><span class="o">.</span><span class="n">SetStyle</span><span class="p">(</span><span class="s">&quot;Plain&quot;</span><span class="p">)</span>
+<span class="n">ROOT</span><span class="o">.</span><span class="n">gStyle</span><span class="o">.</span><span class="n">SetOptStat</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ROOT</span><span class="o">.</span><span class="n">gStyle</span><span class="o">.</span><span class="n">SetOptTitle</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+<span class="n">c</span><span class="o">.</span><span class="n">Divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
+
+<span class="n">rand</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TRandom3</span><span class="p">()</span>
+<span class="n">h1</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;h1&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Histogram 1&quot;</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">h1</span><span class="o">.</span><span class="n">Sumw2</span><span class="p">()</span>
+<span class="n">h1</span><span class="o">.</span><span class="n">SetLineColor</span><span class="p">(</span><span class="n">ROOT</span><span class="o">.</span><span class="n">kRed</span><span class="p">)</span>
+<span class="n">h2</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;h2&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Histogram 2&quot;</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">h2</span><span class="o">.</span><span class="n">SetLineColor</span><span class="p">(</span><span class="n">ROOT</span><span class="o">.</span><span class="n">kBlue</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">ievt</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="c">#some test histograms:</span>
+    <span class="c">#1. let 2 histograms screwed</span>
+    <span class="c">#h1.Fill(rand.Gaus(0.5, 0.8))</span>
+    <span class="c">#h2.Fill(rand.Gaus(0, 1))</span>
+
+    <span class="c">#2. long tail and short tail</span>
+    <span class="n">h1</span><span class="o">.</span><span class="n">Fill</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">Gaus</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+    <span class="n">h2</span><span class="o">.</span><span class="n">Fill</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">Gaus</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">pad</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">h1</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="s">&#39;hist&#39;</span><span class="p">)</span>
+<span class="n">h2</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="s">&#39;hist same&#39;</span><span class="p">)</span>
+<span class="n">pad</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">leg</span> <span class="o">=</span> <span class="n">Legend</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span> <span class="n">leftmargin</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">topmargin</span><span class="o">=</span><span class="mf">0.11</span><span class="p">,</span> <span class="n">rightmargin</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">SetFillColor</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">AddEntry</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h1</span><span class="o">.</span><span class="n">GetTitle</span><span class="p">(),</span> <span class="s">&quot;l&quot;</span><span class="p">)</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">AddEntry</span><span class="p">(</span><span class="n">h2</span><span class="p">,</span> <span class="n">h2</span><span class="o">.</span><span class="n">GetTitle</span><span class="p">(),</span> <span class="s">&quot;l&quot;</span><span class="p">)</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">Draw</span><span class="p">()</span>
+
+<span class="n">pad</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">gr</span> <span class="o">=</span> <span class="n">qqgraph</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span>
+
+<span class="n">gr</span><span class="o">.</span><span class="n">GetXaxis</span><span class="p">()</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="n">h1</span><span class="o">.</span><span class="n">GetTitle</span><span class="p">())</span>
+<span class="n">gr</span><span class="o">.</span><span class="n">GetYaxis</span><span class="p">()</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="n">h2</span><span class="o">.</span><span class="n">GetTitle</span><span class="p">())</span>
+<span class="n">gr</span><span class="o">.</span><span class="n">fillcolor</span> <span class="o">=</span> <span class="mi">17</span>
+<span class="n">gr</span><span class="o">.</span><span class="n">fillstyle</span> <span class="o">=</span> <span class="s">&#39;solid&#39;</span>
+<span class="n">gr</span><span class="o">.</span><span class="n">linecolor</span> <span class="o">=</span> <span class="mi">17</span>
+<span class="n">gr</span><span class="o">.</span><span class="n">markercolor</span> <span class="o">=</span> <span class="s">&#39;darkred&#39;</span>
+<span class="n">gr</span><span class="o">.</span><span class="n">markerstyle</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">gr</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;QQ with CL&quot;</span>
+
+<span class="n">gr</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="s">&quot;ap&quot;</span><span class="p">)</span>
+<span class="n">x_min</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">GetXaxis</span><span class="p">()</span><span class="o">.</span><span class="n">GetXmin</span><span class="p">()</span>
+<span class="n">x_max</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">GetXaxis</span><span class="p">()</span><span class="o">.</span><span class="n">GetXmax</span><span class="p">()</span>
+<span class="n">y_min</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">GetXaxis</span><span class="p">()</span><span class="o">.</span><span class="n">GetXmin</span><span class="p">()</span>
+<span class="n">y_max</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">GetXaxis</span><span class="p">()</span><span class="o">.</span><span class="n">GetXmax</span><span class="p">()</span>
+<span class="n">gr</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="s">&#39;a3&#39;</span><span class="p">)</span>
+<span class="n">gr</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="s">&#39;Xp same&#39;</span><span class="p">)</span>
+
+<span class="c"># a straight line y=x to be a reference</span>
+<span class="n">f_dia</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TF1</span><span class="p">(</span><span class="s">&quot;f_dia&quot;</span><span class="p">,</span> <span class="s">&quot;x&quot;</span><span class="p">,</span>
+                 <span class="n">h1</span><span class="o">.</span><span class="n">GetXaxis</span><span class="p">()</span><span class="o">.</span><span class="n">GetXmin</span><span class="p">(),</span>
+                 <span class="n">h1</span><span class="o">.</span><span class="n">GetXaxis</span><span class="p">()</span><span class="o">.</span><span class="n">GetXmax</span><span class="p">())</span>
+<span class="n">f_dia</span><span class="o">.</span><span class="n">SetLineColor</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">f_dia</span><span class="o">.</span><span class="n">SetLineWidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">f_dia</span><span class="o">.</span><span class="n">SetLineStyle</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">f_dia</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="s">&quot;same&quot;</span><span class="p">)</span>
+
+<span class="n">leg</span> <span class="o">=</span> <span class="n">Legend</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span> <span class="n">leftmargin</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">topmargin</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">rightmargin</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">SetFillColor</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">SetShadowColor</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span>
+<span class="c">#leg.SetBorderSize(3)</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">AddEntry</span><span class="p">(</span><span class="n">gr</span><span class="p">,</span> <span class="s">&quot;QQ points&quot;</span><span class="p">,</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">AddEntry</span><span class="p">(</span><span class="n">gr</span><span class="p">,</span> <span class="s">&quot;68% CL band&quot;</span><span class="p">,</span> <span class="s">&quot;f&quot;</span><span class="p">)</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">AddEntry</span><span class="p">(</span><span class="n">f_dia</span><span class="p">,</span> <span class="s">&quot;Diagonal line&quot;</span><span class="p">,</span> <span class="s">&quot;l&quot;</span><span class="p">)</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">Draw</span><span class="p">()</span>
+
+<span class="n">c</span><span class="o">.</span><span class="n">Modified</span><span class="p">()</span>
+<span class="n">c</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+<span class="n">c</span><span class="o">.</span><span class="n">Draw</span><span class="p">()</span>
+<span class="n">wait</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the example:</strong>  0.10 seconds</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../plotting/plot_style.html"
+                        title="previous chapter">Setting the plotting style</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../tree/chain.html"
+                        title="next chapter">The TreeChain class, a replacement for TChain</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/auto_examples/stats/plot_quantiles.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../tree/chain.html" title="The TreeChain class, a replacement for TChain"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../plotting/plot_style.html" title="Setting the plotting style"
+             >previous</a> |</li>
+        <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
+          <li><a href="../index.html" >NumPy Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+    &copy; Copyright 2013, rootpy developers.
+</div>
+
+
+
+<!-- Google Analytics Code -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39364267-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+  </body>
+</html>
