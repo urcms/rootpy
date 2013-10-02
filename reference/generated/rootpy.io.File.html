@@ -66,8 +66,13 @@
 <dt id="rootpy.io.File">
 <em class="property">class </em><tt class="descclassname">rootpy.io.</tt><tt class="descname">File</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.io.File" title="Permalink to this definition">¶</a></dt>
 <dd><p>A subclass of ROOT&#8217;s TFile adding all of the rootpy goodness.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rootpy.test</span> <span class="kn">import</span> <span class="n">filename</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rootpy.io</span> <span class="kn">import</span> <span class="n">File</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rootpy.testdata</span> <span class="kn">import</span> <span class="n">get_filepath</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">get_filepath</span><span class="p">(),</span> <span class="s">&#39;read&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="go">[Directory(&#39;means&#39;), Directory(&#39;scales&#39;), Directory(&#39;gaps&#39;), Directory(&#39;efficiencies&#39;), Directory(&#39;dimensions&#39;), Directory(&#39;graphs&#39;)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">means</span>
+<span class="go">Directory(&#39;rootpy/testdata/test_file.root/means&#39;)</span>
 </pre></div>
 </div>
 <dl class="method">
@@ -87,23 +92,35 @@ directory is being copied recursively.</p>
 
 <dl class="method">
 <dt id="rootpy.io.File.find">
-<tt class="descname">find</tt><big>(</big><em>regexp</em>, <em>negate_regexp=False</em>, <em>class_pattern=None</em>, <em>find_fnc=&lt;function search at 0x2aaaaabf3c08&gt;</em>, <em>refresh_cache=False</em><big>)</big><a class="headerlink" href="#rootpy.io.File.find" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">find</tt><big>(</big><em>regexp</em>, <em>negate_regexp=False</em>, <em>class_pattern=None</em>, <em>find_fnc=&lt;function search at 0x1fdcc08&gt;</em>, <em>refresh_cache=False</em><big>)</big><a class="headerlink" href="#rootpy.io.File.find" title="Permalink to this definition">¶</a></dt>
 <dd><p>yield the full path of the matching regular expression and the
 match itself</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rootpy.io.File.keys">
-<tt class="descname">keys</tt><big>(</big><big>)</big><a class="headerlink" href="#rootpy.io.File.keys" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">keys</tt><big>(</big><em>latest=False</em><big>)</big><a class="headerlink" href="#rootpy.io.File.keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of the keys in this directory.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="rootpy.io.File.latest_keys">
-<tt class="descname">latest_keys</tt><big>(</big><big>)</big><a class="headerlink" href="#rootpy.io.File.latest_keys" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of keys with unique names where only the key with the
-highest cycle number is included where multiple keys exist with the
-same name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>latest</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>If True then return a list of keys with unique names where only the
+key with the highest cycle number is included where multiple keys
+exist with the same name.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>keys</strong> : list</p>
+<blockquote class="last">
+<div><p>List of keys</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
