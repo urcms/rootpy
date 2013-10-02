@@ -65,7 +65,15 @@
 <dl class="class">
 <dt id="rootpy.io.File">
 <em class="property">class </em><tt class="descclassname">rootpy.io.</tt><tt class="descname">File</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.io.File" title="Permalink to this definition">¶</a></dt>
-<dd><p>A subclass of ROOT&#8217;s TFile adding all of the rootpy goodness.</p>
+<dd><p>A subclass of ROOT&#8217;s TFile [1]</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[R3]</a></td><td><a class="reference external" href="http://root.cern.ch/root/html/TFile.html">http://root.cern.ch/root/html/TFile.html</a></td></tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rootpy.io</span> <span class="kn">import</span> <span class="n">File</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rootpy.testdata</span> <span class="kn">import</span> <span class="n">get_filepath</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">get_filepath</span><span class="p">(),</span> <span class="s">&#39;read&#39;</span><span class="p">)</span>
@@ -76,23 +84,111 @@
 </pre></div>
 </div>
 <dl class="method">
+<dt id="rootpy.io.File.Close">
+<tt class="descname">Close</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#rootpy.io.File.Close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like ROOT&#8217;s Close but reverts to the gDirectory before this file was
+opened.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="rootpy.io.File.Open">
+<em class="property">static </em><tt class="descname">Open</tt><big>(</big><em>filename</em>, <em>mode=''</em><big>)</big><a class="headerlink" href="#rootpy.io.File.Open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a ROOT file via ROOT&#8217;s static ROOT.TFile.Open [1] function and return
+an asrootpy&#8217;d File.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : string</p>
+<blockquote>
+<div><p>The absolute or relative path to the ROOT file.</p>
+</div></blockquote>
+<p><strong>mode</strong> : string, optional (default=&#8217;&#8216;)</p>
+<blockquote>
+<div><p>The ROOT option for opening a file [2].</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>root_file</strong> : File</p>
+<blockquote class="last">
+<div><p>an instance of rootpy&#8217;s File subclass of ROOT&#8217;s TFile.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[R4]</a></td><td><a class="reference external" href="http://root.cern.ch/root/html/TFile.html#TFile:Open">http://root.cern.ch/root/html/TFile.html#TFile:Open</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="r5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[R5]</a></td><td><a class="reference external" href="http://root.cern.ch/root/html/TFile.html#TFile:TFile&#64;2">http://root.cern.ch/root/html/TFile.html#TFile:TFile&#64;2</a></td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.io.File.cd_previous">
+<tt class="descname">cd_previous</tt><big>(</big><big>)</big><a class="headerlink" href="#rootpy.io.File.cd_previous" title="Permalink to this definition">¶</a></dt>
+<dd><p>cd to the gDirectory before this file was open.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.io.File.close">
+<tt class="descname">close</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#rootpy.io.File.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like ROOT&#8217;s Close but reverts to the gDirectory before this file was
+opened.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="rootpy.io.File.copytree">
 <tt class="descname">copytree</tt><big>(</big><em>dest_dir</em>, <em>src=None</em>, <em>newname=None</em>, <em>exclude=None</em>, <em>overwrite=False</em><big>)</big><a class="headerlink" href="#rootpy.io.File.copytree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy this directory or just one contained object into another
 directory.</p>
-<p><cite>dest_dir</cite> can either be the string path or a Directory.</p>
-<p>If <cite>src</cite> is None then this entire directory is copied recursively
-otherwise if <cite>src</cite> is a string path to an object relative to this
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>dest_dir</strong> : string or Directory</p>
+<blockquote>
+<div><p>The destination directory.</p>
+</div></blockquote>
+<p><strong>src</strong> : string, optional (default=None)</p>
+<blockquote>
+<div><p>If <tt class="docutils literal"><span class="pre">src</span></tt> is None then this entire directory is copied recursively
+otherwise if <tt class="docutils literal"><span class="pre">src</span></tt> is a string path to an object relative to this
 directory, only that object will be copied. The copied object can
-optionally be given a <cite>newname</cite>.</p>
-<p><cite>exclude</cite> can optionally be a function which takes (path, object_name)
-and if returns True excludes objects from being copied if the entire
-directory is being copied recursively.</p>
+optionally be given a <tt class="docutils literal"><span class="pre">newname</span></tt>.</p>
+</div></blockquote>
+<p><strong>newname</strong> : string, optional (default=None)</p>
+<blockquote>
+<div><p>An optional new name for the copied object.</p>
+</div></blockquote>
+<p><strong>exclude</strong> : callable, optional (default=None)</p>
+<blockquote>
+<div><p><tt class="docutils literal"><span class="pre">exclude</span></tt> can optionally be a function which takes
+<tt class="docutils literal"><span class="pre">(path,</span> <span class="pre">object_name)</span></tt> and if returns True excludes
+objects from being copied if the entire directory is being copied
+recursively.</p>
+</div></blockquote>
+<p><strong>overwrite</strong> : bool, optional (default=False)</p>
+<blockquote class="last">
+<div><p>If True, then overwrite existing objects with the same name.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="rootpy.io.File.find">
-<tt class="descname">find</tt><big>(</big><em>regexp</em>, <em>negate_regexp=False</em>, <em>class_pattern=None</em>, <em>find_fnc=&lt;function search at 0x97dc08&gt;</em>, <em>refresh_cache=False</em><big>)</big><a class="headerlink" href="#rootpy.io.File.find" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">find</tt><big>(</big><em>regexp</em>, <em>negate_regexp=False</em>, <em>class_pattern=None</em>, <em>find_fnc=&lt;function search at 0xb83c08&gt;</em>, <em>refresh_cache=False</em><big>)</big><a class="headerlink" href="#rootpy.io.File.find" title="Permalink to this definition">¶</a></dt>
 <dd><p>yield the full path of the matching regular expression and the
 match itself</p>
 </dd></dl>
@@ -135,12 +231,68 @@ as required. Return the newly created TDirectory.</p>
 <tt class="descname">objects</tt><big>(</big><em>cls=None</em><big>)</big><a class="headerlink" href="#rootpy.io.File.objects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an iterater over all objects in this directory which are
 instances of <cite>cls</cite>. By default, iterate over all objects (<cite>cls=None</cite>).</p>
-<p>Example usage:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cls</strong> : a class, optional (default=None)</p>
 <blockquote>
-<div><p>$ rootpy browse myfile.root</p>
+<div><p>If a class is specified, only iterate over objects that are
+instances of this class.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>A generator over the objects in this directory.</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>$ rootpy browse myfile.root</p>
 <p>In [1]: list(f1.objects(R.Directory))
 Out[1]: [Directory(&#8216;mydirectory&#8217;)]</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="rootpy.io.File.open">
+<em class="property">static </em><tt class="descname">open</tt><big>(</big><em>filename</em>, <em>mode=''</em><big>)</big><a class="headerlink" href="#rootpy.io.File.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a ROOT file via ROOT&#8217;s static ROOT.TFile.Open [1] function and return
+an asrootpy&#8217;d File.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : string</p>
+<blockquote>
+<div><p>The absolute or relative path to the ROOT file.</p>
 </div></blockquote>
+<p><strong>mode</strong> : string, optional (default=&#8217;&#8216;)</p>
+<blockquote>
+<div><p>The ROOT option for opening a file [2].</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>root_file</strong> : File</p>
+<blockquote class="last">
+<div><p>an instance of rootpy&#8217;s File subclass of ROOT&#8217;s TFile.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[R7]</a></td><td><a class="reference external" href="http://root.cern.ch/root/html/TFile.html#TFile:Open">http://root.cern.ch/root/html/TFile.html#TFile:Open</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="r8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[R8]</a></td><td><a class="reference external" href="http://root.cern.ch/root/html/TFile.html#TFile:TFile&#64;2">http://root.cern.ch/root/html/TFile.html#TFile:TFile&#64;2</a></td></tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -152,23 +304,68 @@ Out[1]: [Directory(&#8216;mydirectory&#8217;)]</p>
 <dl class="method">
 <dt id="rootpy.io.File.walk">
 <tt class="descname">walk</tt><big>(</big><em>top=None</em>, <em>path=None</em>, <em>depth=0</em>, <em>maxdepth=-1</em>, <em>class_pattern=None</em>, <em>return_classname=False</em>, <em>treat_dirs_as_objs=False</em><big>)</big><a class="headerlink" href="#rootpy.io.File.walk" title="Permalink to this definition">¶</a></dt>
-<dd><p>For each directory in the directory tree rooted at top (including top
-itself, but excluding &#8216;.&#8217; and &#8216;..&#8217;), yields a 3-tuple:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span>
-</pre></div>
-</div>
-<p><cite>dirpath</cite> is a string, the path to the directory.  dirnames is a list
-of the names of the subdirectories in <cite>dirpath</cite>
-(excluding &#8216;.&#8217; and &#8216;..&#8217;).</p>
-<p><cite>filenames</cite> is a list of the names of the non-directory files/objects
-in <cite>dirpath</cite>.</p>
-<p>Note that the names in the lists are just names, with no
-path components.  To get a full path (which begins with top) to a file
-or directory in <cite>dirpath</cite>, do <cite>os.path.join(dirpath, name)</cite>.</p>
-<p>If <cite>return_classname</cite> is True, each entry in <cite>filenames</cite> is a tuple of
-the form <cite>(filename, classname)</cite>.</p>
-<p>If <cite>treat_dirs_as_objs</cite> is True, <cite>filenames</cite> contains directories
-as well.</p>
+<dd><p>Walk the directory structure and content in and below a directory.
+For each directory in the directory tree rooted at <tt class="docutils literal"><span class="pre">top</span></tt> (including
+<tt class="docutils literal"><span class="pre">top</span></tt> itself, but excluding &#8216;.&#8217; and &#8216;..&#8217;), yield a 3-tuple
+<tt class="docutils literal"><span class="pre">dirpath,</span> <span class="pre">dirnames,</span> <span class="pre">filenames</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>top</strong> : string, optional (default=None)</p>
+<blockquote>
+<div><p>A path to a starting directory relative to this directory,
+otherwise start at this directory.</p>
+</div></blockquote>
+<p><strong>path</strong> : string, optional (default=None)</p>
+<blockquote>
+<div><p>A path prepended as a prefix on the <tt class="docutils literal"><span class="pre">dirpath</span></tt>. This argument is
+used internally as the recursion traverses down through
+subdirectories.</p>
+</div></blockquote>
+<p><strong>depth</strong> : int, optional (default=0)</p>
+<blockquote>
+<div><p>The current depth, used internally as the recursion traverses down
+through subdirectories.</p>
+</div></blockquote>
+<p><strong>max_depth</strong> : int, optional (default=-1)</p>
+<blockquote>
+<div><p>The maximum depth in the directory hierarchy to traverse. There is
+no limit applied by default.</p>
+</div></blockquote>
+<p><strong>class_pattern</strong> : string, optional (default=None)</p>
+<blockquote>
+<div><p>If not None then only include objects in <tt class="docutils literal"><span class="pre">filenames</span></tt> with class
+names that match <tt class="docutils literal"><span class="pre">class_pattern</span></tt>. <tt class="docutils literal"><span class="pre">class_pattern</span></tt> should be a
+Unix shell-style wildcarded string.</p>
+</div></blockquote>
+<p><strong>return_classname</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>If True, then each entry in <tt class="docutils literal"><span class="pre">filenames</span></tt> is a tuple of
+the form <tt class="docutils literal"><span class="pre">(filename,</span> <span class="pre">classname)</span></tt>.</p>
+</div></blockquote>
+<p><strong>treat_dirs_as_objs</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>If True, <tt class="docutils literal"><span class="pre">filenames</span></tt> contains directories as well.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>dirpath, dirnames, filenames</strong> : iterator</p>
+<blockquote class="last">
+<div><p>An iterator over the 3-tuples <tt class="docutils literal"><span class="pre">dirpath,</span> <span class="pre">dirnames,</span> <span class="pre">filenames</span></tt>.
+<tt class="docutils literal"><span class="pre">dirpath</span></tt> is a string, the path to the directory. <tt class="docutils literal"><span class="pre">dirnames</span></tt> is
+a list of the names of the subdirectories in <tt class="docutils literal"><span class="pre">dirpath</span></tt>
+(excluding &#8216;.&#8217; and &#8216;..&#8217;). <tt class="docutils literal"><span class="pre">filenames</span></tt> is a list of the names of
+the non-directory files/objects in <tt class="docutils literal"><span class="pre">dirpath</span></tt>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The names in the lists are just names, with no path components.
+To get a full path (which begins with top) to a file or directory
+in <tt class="docutils literal"><span class="pre">dirpath</span></tt>, use <tt class="docutils literal"><span class="pre">os.path.join(dirpath,</span> <span class="pre">name)</span></tt>.</p>
 </dd></dl>
 
 </dd></dl>

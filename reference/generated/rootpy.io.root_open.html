@@ -65,7 +65,44 @@
 <dl class="function">
 <dt id="rootpy.io.root_open">
 <tt class="descclassname">rootpy.io.</tt><tt class="descname">root_open</tt><big>(</big><em>filename</em>, <em>mode=''</em><big>)</big><a class="headerlink" href="#rootpy.io.root_open" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Open a ROOT file via ROOT&#8217;s static ROOT.TFile.Open [1] function and return
+an asrootpy&#8217;d File.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : string</p>
+<blockquote>
+<div><p>The absolute or relative path to the ROOT file.</p>
+</div></blockquote>
+<p><strong>mode</strong> : string, optional (default=&#8217;&#8216;)</p>
+<blockquote>
+<div><p>The ROOT option for opening a file [2].</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>root_file</strong> : File</p>
+<blockquote class="last">
+<div><p>an instance of rootpy&#8217;s File subclass of ROOT&#8217;s TFile.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[R18]</a></td><td><a class="reference external" href="http://root.cern.ch/root/html/TFile.html#TFile:Open">http://root.cern.ch/root/html/TFile.html#TFile:Open</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="r19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[R19]</a></td><td><a class="reference external" href="http://root.cern.ch/root/html/TFile.html#TFile:TFile&#64;2">http://root.cern.ch/root/html/TFile.html#TFile:TFile&#64;2</a></td></tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 
