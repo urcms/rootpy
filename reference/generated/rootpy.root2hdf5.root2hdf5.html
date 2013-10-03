@@ -65,7 +65,51 @@
 <dl class="function">
 <dt id="rootpy.root2hdf5.root2hdf5">
 <tt class="descclassname">rootpy.root2hdf5.</tt><tt class="descname">root2hdf5</tt><big>(</big><em>rfile</em>, <em>hfile</em>, <em>rpath=''</em>, <em>entries=-1</em>, <em>userfunc=None</em>, <em>selection=None</em>, <em>show_progress=False</em><big>)</big><a class="reference internal" href="../../_modules/rootpy/root2hdf5.html#root2hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.root2hdf5.root2hdf5" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Convert all trees in a ROOT file into tables in an HDF5 file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>rfile</strong> : string or asrootpy&#8217;d ROOT File</p>
+<blockquote>
+<div><p>A ROOT File handle or string path to an existing ROOT file.</p>
+</div></blockquote>
+<p><strong>hfile</strong> : string or PyTables HDF5 File</p>
+<blockquote>
+<div><p>A PyTables HDF5 File handle or string path to an existing HDF5 file.</p>
+</div></blockquote>
+<p><strong>rpath</strong> : string, optional (default=&#8217;&#8216;)</p>
+<blockquote>
+<div><p>Top level path to begin traversal through the ROOT file. By default
+convert everything in and below the root directory.</p>
+</div></blockquote>
+<p><strong>entries</strong> : int, optional (default=-1)</p>
+<blockquote>
+<div><p>The number of entries to read at once while converting a ROOT TTree
+into an HDF5 table. By default read the entire TTree into memory (this
+may not be desired if your TTrees are large).</p>
+</div></blockquote>
+<p><strong>userfunc</strong> : callable, optional (default=None)</p>
+<blockquote>
+<div><p>A function that will be called on every tree and that must return a
+tree or list of trees that will be converted instead of the original
+tree.</p>
+</div></blockquote>
+<p><strong>selection</strong> : string, optional (default=None)</p>
+<blockquote>
+<div><p>A ROOT selection expression to be applied on all trees before
+conversion.</p>
+</div></blockquote>
+<p><strong>show_progress</strong> : bool, optional (default=False)</p>
+<blockquote class="last">
+<div><p>If True, then display and update a progress bar on stdout as each tree
+is converted.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 

@@ -102,7 +102,41 @@
               <span class="n">entries</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">userfunc</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
               <span class="n">selection</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
               <span class="n">show_progress</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert all trees in a ROOT file into tables in an HDF5 file.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    rfile : string or asrootpy&#39;d ROOT File</span>
+<span class="sd">        A ROOT File handle or string path to an existing ROOT file.</span>
+
+<span class="sd">    hfile : string or PyTables HDF5 File</span>
+<span class="sd">        A PyTables HDF5 File handle or string path to an existing HDF5 file.</span>
+
+<span class="sd">    rpath : string, optional (default=&#39;&#39;)</span>
+<span class="sd">        Top level path to begin traversal through the ROOT file. By default</span>
+<span class="sd">        convert everything in and below the root directory.</span>
+
+<span class="sd">    entries : int, optional (default=-1)</span>
+<span class="sd">        The number of entries to read at once while converting a ROOT TTree</span>
+<span class="sd">        into an HDF5 table. By default read the entire TTree into memory (this</span>
+<span class="sd">        may not be desired if your TTrees are large).</span>
+
+<span class="sd">    userfunc : callable, optional (default=None)</span>
+<span class="sd">        A function that will be called on every tree and that must return a</span>
+<span class="sd">        tree or list of trees that will be converted instead of the original</span>
+<span class="sd">        tree.</span>
+
+<span class="sd">    selection : string, optional (default=None)</span>
+<span class="sd">        A ROOT selection expression to be applied on all trees before</span>
+<span class="sd">        conversion.</span>
+
+<span class="sd">    show_progress : bool, optional (default=False)</span>
+<span class="sd">        If True, then display and update a progress bar on stdout as each tree</span>
+<span class="sd">        is converted.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">show_progress</span> <span class="o">=</span> <span class="n">show_progress</span> <span class="ow">and</span> <span class="n">check_tty</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
         <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s">&#39; &#39;</span><span class="p">,</span> <span class="n">Bar</span><span class="p">(),</span> <span class="s">&#39; &#39;</span><span class="p">,</span> <span class="n">ETA</span><span class="p">()]</span>
@@ -256,7 +290,9 @@
                           <span class="n">RawTextHelpFormatter</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">formatter_class</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">formatter_class</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s">&quot;Convert ROOT files containing TTrees into HDF5 files &quot;</span>
+                    <span class="s">&quot;containing HDF5 tables&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;--version&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&#39;version&#39;</span><span class="p">,</span>
                         <span class="n">version</span><span class="o">=</span><span class="n">rootpy</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s">&quot;show the version number and exit&quot;</span><span class="p">)</span>
