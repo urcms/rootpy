@@ -69,14 +69,14 @@ confidential level (CL) band, originally by Zhiyi Liu, <a class="reference exter
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">ROOT</span>
 <span class="kn">from</span> <span class="nn">rootpy.interactive</span> <span class="kn">import</span> <span class="n">wait</span>
 <span class="kn">from</span> <span class="nn">rootpy.plotting</span> <span class="kn">import</span> <span class="n">Hist</span><span class="p">,</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">Legend</span>
-<span class="kn">from</span> <span class="nn">rootpy.stats.utils.quantiles</span> <span class="kn">import</span> <span class="n">qqgraph</span>
+<span class="kn">from</span> <span class="nn">rootpy.plotting.contrib.quantiles</span> <span class="kn">import</span> <span class="n">qqgraph</span>
 
 <span class="n">ROOT</span><span class="o">.</span><span class="n">gROOT</span><span class="o">.</span><span class="n">SetStyle</span><span class="p">(</span><span class="s">&quot;Plain&quot;</span><span class="p">)</span>
 <span class="n">ROOT</span><span class="o">.</span><span class="n">gStyle</span><span class="o">.</span><span class="n">SetOptStat</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">ROOT</span><span class="o">.</span><span class="n">gStyle</span><span class="o">.</span><span class="n">SetOptTitle</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="n">c</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
-<span class="n">c</span><span class="o">.</span><span class="n">Divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">c</span><span class="o">.</span><span class="n">Divide</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
 
 <span class="n">rand</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TRandom3</span><span class="p">()</span>
 <span class="n">h1</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;h1&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Histogram 1&quot;</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">&#39;red&#39;</span><span class="p">)</span>
@@ -152,7 +152,7 @@ confidential level (CL) band, originally by Zhiyi Liu, <a class="reference exter
 <span class="n">wait</span><span class="p">()</span>
 </pre></div>
 </div>
-<p><strong>Total running time of the example:</strong>  0.11 seconds</p>
+<p><strong>Total running time of the example:</strong>  0.10 seconds</p>
 </div>
 
 

@@ -17,7 +17,7 @@ This example demonstrates how to create and work with ROOT histogram in rootpy.
 
 **Script output**::
 
-  61c0e3f96b3a4fb7b74157c075be6fc7
+  13679a7b86f140e39bb57d6f6de76a64
   my hist
   Some Data
   1.0

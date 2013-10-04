@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
 
-    <title>rootpy.memory.deletion.monitor_object_deletion &mdash; rootpy dev documentation</title>
+    <title>rootpy.plotting.contrib.plot_corrcoef_matrix &mdash; rootpy dev documentation</title>
 
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 
@@ -30,9 +30,9 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../../../_static/searchtools.js"></script>
     <link rel="top" title="rootpy dev documentation" href="../../index.html" />
-    <link rel="up" title="rootpy.memory.deletion: Monitor Object Deletions" href="../memory.deletion.html" />
-    <link rel="next" title="rootpy.memory.ownership: Querying Object Ownership" href="../memory.ownership.html" />
-    <link rel="prev" title="rootpy.memory.deletion.monitor_deletion" href="rootpy.memory.deletion.monitor_deletion.html" /> 
+    <link rel="up" title="rootpy.plotting.contrib: Contributed Plotting Functions" href="../plotting.contrib.html" />
+    <link rel="next" title="rootpy.plotting.root2matplotlib: matplotlib Interface" href="../plotting.root2matplotlib.html" />
+    <link rel="prev" title="rootpy.plotting.contrib.plot_contour_matrix" href="rootpy.plotting.contrib.plot_contour_matrix.html" /> 
   </head>
   <body>
     <div class="related">
@@ -45,13 +45,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../memory.ownership.html" title="rootpy.memory.ownership: Querying Object Ownership"
+          <a href="../plotting.root2matplotlib.html" title="rootpy.plotting.root2matplotlib: matplotlib Interface"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="rootpy.memory.deletion.monitor_deletion.html" title="rootpy.memory.deletion.monitor_deletion"
+          <a href="rootpy.plotting.contrib.plot_contour_matrix.html" title="rootpy.plotting.contrib.plot_contour_matrix"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
-          <li><a href="../memory.deletion.html" accesskey="U"><tt class="docutils literal"><span class="pre">rootpy.memory.deletion</span></tt>: Monitor Object Deletions</a> &raquo;</li> 
+          <li><a href="../plotting.contrib.html" accesskey="U"><tt class="docutils literal"><span class="pre">rootpy.plotting.contrib</span></tt>: Contributed Plotting Functions</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -60,12 +60,50 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="rootpy-memory-deletion-monitor-object-deletion">
-<h1>rootpy.memory.deletion.monitor_object_deletion<a class="headerlink" href="#rootpy-memory-deletion-monitor-object-deletion" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="rootpy-plotting-contrib-plot-corrcoef-matrix">
+<h1>rootpy.plotting.contrib.plot_corrcoef_matrix<a class="headerlink" href="#rootpy-plotting-contrib-plot-corrcoef-matrix" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="rootpy.memory.deletion.monitor_object_deletion">
-<tt class="descclassname">rootpy.memory.deletion.</tt><tt class="descname">monitor_object_deletion</tt><big>(</big><em>o</em>, <em>fn=&lt;function &lt;lambda&gt; at 0x70b4c80&gt;</em><big>)</big><a class="reference internal" href="../../_modules/rootpy/memory/deletion.html#monitor_object_deletion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.memory.deletion.monitor_object_deletion" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="rootpy.plotting.contrib.plot_corrcoef_matrix">
+<tt class="descclassname">rootpy.plotting.contrib.</tt><tt class="descname">plot_corrcoef_matrix</tt><big>(</big><em>data</em>, <em>fields</em>, <em>output_name</em>, <em>weights=None</em>, <em>cmap=None</em>, <em>title=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.contrib.plot_corrcoef_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will draw a lower-triangular correlation matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : numpy array</p>
+<blockquote>
+<div><p>2-dimensional array with rows for row-wise observations and column-wise
+fields.</p>
+</div></blockquote>
+<p><strong>fields</strong> : list of strings</p>
+<blockquote>
+<div><p>List of the field names</p>
+</div></blockquote>
+<p><strong>output_name</strong> : string</p>
+<blockquote>
+<div><p>Output image file name (including extension)</p>
+</div></blockquote>
+<p><strong>weights</strong> : numpy array, optional (default=None)</p>
+<blockquote>
+<div><p>1-dimensional array containing observation weights with length equal to
+the number of rows in <tt class="docutils literal"><span class="pre">data</span></tt>. By default all events have equal weight
+of 1.</p>
+</div></blockquote>
+<p><strong>cmap</strong> : matplotlib color map, optional (default=None)</p>
+<blockquote>
+<div><p>Color map used to color the matrix cells.</p>
+</div></blockquote>
+<p><strong>title</strong> : string, optional (default=None)</p>
+<blockquote class="last">
+<div><p>A title to display on the top right of the plot.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>NumPy and matplotlib are required</p>
+</dd></dl>
 
 </div>
 
@@ -79,14 +117,14 @@
               <img class="logo" src="../../_static/rootpy-logo-80dpi.png" alt="Logo"/>
             </a></p>
   <h4>Previous topic</h4>
-  <p class="topless"><a href="rootpy.memory.deletion.monitor_deletion.html"
-                        title="previous chapter">rootpy.memory.deletion.monitor_deletion</a></p>
+  <p class="topless"><a href="rootpy.plotting.contrib.plot_contour_matrix.html"
+                        title="previous chapter">rootpy.plotting.contrib.plot_contour_matrix</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../memory.ownership.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">rootpy.memory.ownership</span></tt>: Querying Object Ownership</a></p>
+  <p class="topless"><a href="../plotting.root2matplotlib.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">rootpy.plotting.root2matplotlib</span></tt>: matplotlib Interface</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../../_sources/reference/generated/rootpy.memory.deletion.monitor_object_deletion.txt"
+    <li><a href="../../_sources/reference/generated/rootpy.plotting.contrib.plot_corrcoef_matrix.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -116,13 +154,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../memory.ownership.html" title="rootpy.memory.ownership: Querying Object Ownership"
+          <a href="../plotting.root2matplotlib.html" title="rootpy.plotting.root2matplotlib: matplotlib Interface"
              >next</a> |</li>
         <li class="right" >
-          <a href="rootpy.memory.deletion.monitor_deletion.html" title="rootpy.memory.deletion.monitor_deletion"
+          <a href="rootpy.plotting.contrib.plot_contour_matrix.html" title="rootpy.plotting.contrib.plot_contour_matrix"
              >previous</a> |</li>
         <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
-          <li><a href="../memory.deletion.html" ><tt class="docutils literal"><span class="pre">rootpy.memory.deletion</span></tt>: Monitor Object Deletions</a> &raquo;</li> 
+          <li><a href="../plotting.contrib.html" ><tt class="docutils literal"><span class="pre">rootpy.plotting.contrib</span></tt>: Contributed Plotting Functions</a> &raquo;</li> 
       </ul>
     </div>
 <div class="footer">
