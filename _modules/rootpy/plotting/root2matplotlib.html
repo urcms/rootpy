@@ -812,7 +812,7 @@
         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="contour"><a class="viewcode-back" href="../../../reference/generated/rootpy.plotting.root2matplotlib.contour.html#rootpy.plotting.root2matplotlib.contour">[docs]</a><span class="k">def</span> <span class="nf">contour</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="contour"><a class="viewcode-back" href="../../../reference/generated/rootpy.plotting.root2matplotlib.contour.html#rootpy.plotting.root2matplotlib.contour">[docs]</a><span class="k">def</span> <span class="nf">contour</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Draw a matplotlib contour plot from a 2D ROOT histogram.</span>
 
@@ -824,6 +824,12 @@
 
 <span class="sd">    axes : matplotlib Axes instance, optional (default=None)</span>
 <span class="sd">        The axes to plot on. If None then use the global current axes.</span>
+
+<span class="sd">    zoom : float or sequence, optional (default=None)</span>
+<span class="sd">        The zoom factor along the axes. If a float, zoom is the same for each</span>
+<span class="sd">        axis. If a sequence, zoom should contain one value for each axis.</span>
+<span class="sd">        The histogram is zoomed using a cubic spline interpolation to create</span>
+<span class="sd">        smooth contours.</span>
 
 <span class="sd">    kwargs : additional keyword arguments, optional</span>
 <span class="sd">        Additional keyword arguments are passed directly to</span>
@@ -840,6 +846,18 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">x</span><span class="p">()))</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">y</span><span class="p">()))</span>
     <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">z</span><span class="p">())</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">zoom</span><span class="p">,</span> <span class="s">&#39;__iter__&#39;</span><span class="p">):</span>
+            <span class="n">zoom</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">zoom</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">zoom</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">zoom</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">zoom</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">zoom</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">zoom</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">axes</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 

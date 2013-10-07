@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
 
-    <title>rootpy.plotting.root2matplotlib.contour &mdash; rootpy dev documentation</title>
+    <title>rootpy.plotting.utils.all_primitives &mdash; rootpy dev documentation</title>
 
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 
@@ -30,9 +30,9 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../../../_static/searchtools.js"></script>
     <link rel="top" title="rootpy dev documentation" href="../../index.html" />
-    <link rel="up" title="rootpy.plotting.root2matplotlib: matplotlib Interface" href="../plotting.root2matplotlib.html" />
-    <link rel="next" title="rootpy.plotting.utils: Plotting Utilities" href="../plotting.utils.html" />
-    <link rel="prev" title="rootpy.plotting.root2matplotlib.imshow" href="rootpy.plotting.root2matplotlib.imshow.html" /> 
+    <link rel="up" title="rootpy.plotting.utils: Plotting Utilities" href="../plotting.utils.html" />
+    <link rel="next" title="rootpy.plotting.utils.canvases_with" href="rootpy.plotting.utils.canvases_with.html" />
+    <link rel="prev" title="rootpy.plotting.utils.get_band" href="rootpy.plotting.utils.get_band.html" /> 
   </head>
   <body>
     <div class="related">
@@ -45,13 +45,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../plotting.utils.html" title="rootpy.plotting.utils: Plotting Utilities"
+          <a href="rootpy.plotting.utils.canvases_with.html" title="rootpy.plotting.utils.canvases_with"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="rootpy.plotting.root2matplotlib.imshow.html" title="rootpy.plotting.root2matplotlib.imshow"
+          <a href="rootpy.plotting.utils.get_band.html" title="rootpy.plotting.utils.get_band"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
-          <li><a href="../plotting.root2matplotlib.html" accesskey="U"><tt class="docutils literal"><span class="pre">rootpy.plotting.root2matplotlib</span></tt>: matplotlib Interface</a> &raquo;</li> 
+          <li><a href="../plotting.utils.html" accesskey="U"><tt class="docutils literal"><span class="pre">rootpy.plotting.utils</span></tt>: Plotting Utilities</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -60,43 +60,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="rootpy-plotting-root2matplotlib-contour">
-<h1>rootpy.plotting.root2matplotlib.contour<a class="headerlink" href="#rootpy-plotting-root2matplotlib-contour" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="rootpy-plotting-utils-all-primitives">
+<h1>rootpy.plotting.utils.all_primitives<a class="headerlink" href="#rootpy-plotting-utils-all-primitives" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="rootpy.plotting.root2matplotlib.contour">
-<tt class="descclassname">rootpy.plotting.root2matplotlib.</tt><tt class="descname">contour</tt><big>(</big><em>h</em>, <em>axes=None</em>, <em>zoom=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../../_modules/rootpy/plotting/root2matplotlib.html#contour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.root2matplotlib.contour" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw a matplotlib contour plot from a 2D ROOT histogram.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>h</strong> : Hist2D</p>
-<blockquote>
-<div><p>A rootpy Hist2D</p>
-</div></blockquote>
-<p><strong>axes</strong> : matplotlib Axes instance, optional (default=None)</p>
-<blockquote>
-<div><p>The axes to plot on. If None then use the global current axes.</p>
-</div></blockquote>
-<p><strong>zoom</strong> : float or sequence, optional (default=None)</p>
-<blockquote>
-<div><p>The zoom factor along the axes. If a float, zoom is the same for each
-axis. If a sequence, zoom should contain one value for each axis.
-The histogram is zoomed using a cubic spline interpolation to create
-smooth contours.</p>
-</div></blockquote>
-<p><strong>kwargs</strong> : additional keyword arguments, optional</p>
-<blockquote>
-<div><p>Additional keyword arguments are passed directly to
-matplotlib&#8217;s contour function.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>Returns the value from matplotlib&#8217;s contour function.</strong> :</p>
-</td>
-</tr>
-</tbody>
-</table>
+<dt id="rootpy.plotting.utils.all_primitives">
+<tt class="descclassname">rootpy.plotting.utils.</tt><tt class="descname">all_primitives</tt><big>(</big><em>pad</em><big>)</big><a class="reference internal" href="../../_modules/rootpy/plotting/utils.html#all_primitives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.utils.all_primitives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively find all primities on a canvas, even those hiding behind a
+GetListOfFunctions() of a primitive</p>
 </dd></dl>
 
 </div>
@@ -111,14 +81,14 @@ matplotlib&#8217;s contour function.</p>
               <img class="logo" src="../../_static/rootpy-logo-80dpi.png" alt="Logo"/>
             </a></p>
   <h4>Previous topic</h4>
-  <p class="topless"><a href="rootpy.plotting.root2matplotlib.imshow.html"
-                        title="previous chapter">rootpy.plotting.root2matplotlib.imshow</a></p>
+  <p class="topless"><a href="rootpy.plotting.utils.get_band.html"
+                        title="previous chapter">rootpy.plotting.utils.get_band</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../plotting.utils.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">rootpy.plotting.utils</span></tt>: Plotting Utilities</a></p>
+  <p class="topless"><a href="rootpy.plotting.utils.canvases_with.html"
+                        title="next chapter">rootpy.plotting.utils.canvases_with</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../../_sources/reference/generated/rootpy.plotting.root2matplotlib.contour.txt"
+    <li><a href="../../_sources/reference/generated/rootpy.plotting.utils.all_primitives.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -148,13 +118,13 @@ matplotlib&#8217;s contour function.</p>
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../plotting.utils.html" title="rootpy.plotting.utils: Plotting Utilities"
+          <a href="rootpy.plotting.utils.canvases_with.html" title="rootpy.plotting.utils.canvases_with"
              >next</a> |</li>
         <li class="right" >
-          <a href="rootpy.plotting.root2matplotlib.imshow.html" title="rootpy.plotting.root2matplotlib.imshow"
+          <a href="rootpy.plotting.utils.get_band.html" title="rootpy.plotting.utils.get_band"
              >previous</a> |</li>
         <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
-          <li><a href="../plotting.root2matplotlib.html" ><tt class="docutils literal"><span class="pre">rootpy.plotting.root2matplotlib</span></tt>: matplotlib Interface</a> &raquo;</li> 
+          <li><a href="../plotting.utils.html" ><tt class="docutils literal"><span class="pre">rootpy.plotting.utils</span></tt>: Plotting Utilities</a> &raquo;</li> 
       </ul>
     </div>
 <div class="footer">

@@ -14,10 +14,16 @@ import rootpy
 rootpy.log.basic_config_colorized()
 from rootpy.plotting import Hist, HistStack, Legend, Canvas
 from rootpy.plotting.style import get_style, set_style
+from rootpy.plotting.utils import get_limits
 from rootpy.interactive import wait
 import rootpy.plotting.root2matplotlib as rplt
 import matplotlib.pyplot as plt
 from matplotlib.ticker import AutoMinorLocator, MultipleLocator
+
+# set the style
+style = get_style('ATLAS')
+style.SetEndErrorSize(3)
+set_style(style)
 
 # set the random seed
 ROOT.gRandom.SetSeed(42)
@@ -53,14 +59,16 @@ h2.linewidth = 0
 stack = HistStack()
 stack.Add(h1)
 stack.Add(h2)
-# hack to change y-axis range in ROOT
-stack.SetMaximum(stack.GetMaximum() * 1.2)
 
 # plot with ROOT
-style = get_style('ATLAS')
-style.SetEndErrorSize(3)
-set_style(style)
 canvas = Canvas(width=700, height=500)
+
+# try setting logy=True and uncommenting the two lines below
+xmin, xmax, ymin, ymax = get_limits([stack, h3], logy=False)
+stack.SetMaximum(ymax)
+#stack.SetMinimum(ymin)
+#canvas.SetLogy()
+
 stack.Draw('HIST E1 X0')
 h3.Draw('SAME E1 X0')
 stack.xaxis.SetTitle('Mass')

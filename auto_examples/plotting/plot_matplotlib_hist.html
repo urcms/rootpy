@@ -73,10 +73,16 @@ attributes and displayed via ROOT or matplotlib.</p>
 <span class="n">rootpy</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">basic_config_colorized</span><span class="p">()</span>
 <span class="kn">from</span> <span class="nn">rootpy.plotting</span> <span class="kn">import</span> <span class="n">Hist</span><span class="p">,</span> <span class="n">HistStack</span><span class="p">,</span> <span class="n">Legend</span><span class="p">,</span> <span class="n">Canvas</span>
 <span class="kn">from</span> <span class="nn">rootpy.plotting.style</span> <span class="kn">import</span> <span class="n">get_style</span><span class="p">,</span> <span class="n">set_style</span>
+<span class="kn">from</span> <span class="nn">rootpy.plotting.utils</span> <span class="kn">import</span> <span class="n">get_limits</span>
 <span class="kn">from</span> <span class="nn">rootpy.interactive</span> <span class="kn">import</span> <span class="n">wait</span>
 <span class="kn">import</span> <span class="nn">rootpy.plotting.root2matplotlib</span> <span class="kn">as</span> <span class="nn">rplt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">AutoMinorLocator</span><span class="p">,</span> <span class="n">MultipleLocator</span>
+
+<span class="c"># set the style</span>
+<span class="n">style</span> <span class="o">=</span> <span class="n">get_style</span><span class="p">(</span><span class="s">&#39;ATLAS&#39;</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">SetEndErrorSize</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">set_style</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
 
 <span class="c"># set the random seed</span>
 <span class="n">ROOT</span><span class="o">.</span><span class="n">gRandom</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -112,14 +118,16 @@ attributes and displayed via ROOT or matplotlib.</p>
 <span class="n">stack</span> <span class="o">=</span> <span class="n">HistStack</span><span class="p">()</span>
 <span class="n">stack</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
 <span class="n">stack</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">h2</span><span class="p">)</span>
-<span class="c"># hack to change y-axis range in ROOT</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">SetMaximum</span><span class="p">(</span><span class="n">stack</span><span class="o">.</span><span class="n">GetMaximum</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">)</span>
 
 <span class="c"># plot with ROOT</span>
-<span class="n">style</span> <span class="o">=</span> <span class="n">get_style</span><span class="p">(</span><span class="s">&#39;ATLAS&#39;</span><span class="p">)</span>
-<span class="n">style</span><span class="o">.</span><span class="n">SetEndErrorSize</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">set_style</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
 <span class="n">canvas</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="c"># try setting logy=True and uncommenting the two lines below</span>
+<span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">get_limits</span><span class="p">([</span><span class="n">stack</span><span class="p">,</span> <span class="n">h3</span><span class="p">],</span> <span class="n">logy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">SetMaximum</span><span class="p">(</span><span class="n">ymax</span><span class="p">)</span>
+<span class="c">#stack.SetMinimum(ymin)</span>
+<span class="c">#canvas.SetLogy()</span>
+
 <span class="n">stack</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="s">&#39;HIST E1 X0&#39;</span><span class="p">)</span>
 <span class="n">h3</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="s">&#39;SAME E1 X0&#39;</span><span class="p">)</span>
 <span class="n">stack</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="s">&#39;Mass&#39;</span><span class="p">)</span>
@@ -162,7 +170,7 @@ attributes and displayed via ROOT or matplotlib.</p>
     <span class="n">wait</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Total running time of the example:</strong>  0.15 seconds</p>
+<p><strong>Total running time of the example:</strong>  0.16 seconds</p>
 </div>
 
 

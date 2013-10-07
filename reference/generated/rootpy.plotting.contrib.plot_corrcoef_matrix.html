@@ -64,7 +64,7 @@
 <h1>rootpy.plotting.contrib.plot_corrcoef_matrix<a class="headerlink" href="#rootpy-plotting-contrib-plot-corrcoef-matrix" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="rootpy.plotting.contrib.plot_corrcoef_matrix">
-<tt class="descclassname">rootpy.plotting.contrib.</tt><tt class="descname">plot_corrcoef_matrix</tt><big>(</big><em>data</em>, <em>fields</em>, <em>output_name</em>, <em>weights=None</em>, <em>cmap=None</em>, <em>title=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.contrib.plot_corrcoef_matrix" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">rootpy.plotting.contrib.</tt><tt class="descname">plot_corrcoef_matrix</tt><big>(</big><em>data</em>, <em>fields</em>, <em>output_name</em>, <em>weights=None</em>, <em>repeat_weights=0</em>, <em>bias=1</em>, <em>ddof=None</em>, <em>cmap=None</em>, <em>title=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.contrib.plot_corrcoef_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function will draw a lower-triangular correlation matrix</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -88,6 +88,28 @@ fields.</p>
 <div><p>1-dimensional array containing observation weights with length equal to
 the number of rows in <tt class="docutils literal"><span class="pre">data</span></tt>. By default all events have equal weight
 of 1.</p>
+</div></blockquote>
+<p><strong>repeat_weights</strong> : int, optional</p>
+<blockquote>
+<div><p>The default treatment of weights in the weighted covariance is to first
+normalize them to unit sum and use the biased weighted covariance
+equation. If <cite>repeat_weights</cite> is 1 then the weights must represent an
+integer number of occurrences of each observation and both a biased and
+unbiased weighted covariance is defined because the total sample size
+can be determined.</p>
+</div></blockquote>
+<p><strong>bias</strong> : int, optional</p>
+<blockquote>
+<div><p>Default normalization is by <tt class="docutils literal"><span class="pre">(N</span> <span class="pre">-</span> <span class="pre">1)</span></tt>, where <tt class="docutils literal"><span class="pre">N</span></tt> is the number of
+observations given (unbiased estimate). If <cite>bias</cite> is 1, then
+normalization is by <tt class="docutils literal"><span class="pre">N</span></tt>. These values can be overridden by using
+the keyword <tt class="docutils literal"><span class="pre">ddof</span></tt>.</p>
+</div></blockquote>
+<p><strong>ddof</strong> : int, optional</p>
+<blockquote>
+<div><p>If not <tt class="docutils literal"><span class="pre">None</span></tt> normalization is by <tt class="docutils literal"><span class="pre">(N</span> <span class="pre">-</span> <span class="pre">ddof)</span></tt>, where <tt class="docutils literal"><span class="pre">N</span></tt> is
+the number of observations; this overrides the value implied by
+<tt class="docutils literal"><span class="pre">bias</span></tt>. The default value is <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
 </div></blockquote>
 <p><strong>cmap</strong> : matplotlib color map, optional (default=None)</p>
 <blockquote>

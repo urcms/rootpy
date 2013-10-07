@@ -64,7 +64,7 @@
 <h1>rootpy.plotting.contrib.plot_contour_matrix<a class="headerlink" href="#rootpy-plotting-contrib-plot-contour-matrix" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="rootpy.plotting.contrib.plot_contour_matrix">
-<tt class="descclassname">rootpy.plotting.contrib.</tt><tt class="descname">plot_contour_matrix</tt><big>(</big><em>arrays</em>, <em>fields</em>, <em>filename</em>, <em>sample_names=None</em>, <em>sample_lines=None</em>, <em>sample_colors=None</em>, <em>color_map=None</em>, <em>num_bins=20</em>, <em>num_contours=3</em>, <em>cell_width=2</em>, <em>cell_height=2</em>, <em>cell_margin_x=0.05</em>, <em>cell_margin_y=0.05</em>, <em>dpi=100</em>, <em>padding=0</em>, <em>animate_field=None</em>, <em>animate_steps=10</em>, <em>animate_delay=20</em>, <em>animate_loop=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.contrib.plot_contour_matrix" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">rootpy.plotting.contrib.</tt><tt class="descname">plot_contour_matrix</tt><big>(</big><em>arrays</em>, <em>fields</em>, <em>filename</em>, <em>weights=None</em>, <em>sample_names=None</em>, <em>sample_lines=None</em>, <em>sample_colors=None</em>, <em>color_map=None</em>, <em>num_bins=20</em>, <em>num_contours=3</em>, <em>cell_width=2</em>, <em>cell_height=2</em>, <em>cell_margin_x=0.05</em>, <em>cell_margin_y=0.05</em>, <em>dpi=100</em>, <em>padding=0</em>, <em>animate_field=None</em>, <em>animate_steps=10</em>, <em>animate_delay=20</em>, <em>animate_loop=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.contrib.plot_contour_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a matrix of contour plots showing all possible 2D projections of a
 multivariate dataset. You may optionally animate the contours as a cut on
 one of the fields is increased. ImageMagick must be installed to produce
@@ -87,6 +87,11 @@ same number of columns.</p>
 <div><p>The output filename. If animatation is enabled
 <tt class="docutils literal"><span class="pre">animate_field</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></tt> then <tt class="docutils literal"><span class="pre">filename</span></tt> must have the .gif
 extension.</p>
+</div></blockquote>
+<p><strong>weights</strong> : list of arrays, optional (default=None)</p>
+<blockquote>
+<div><p>List of 1D NumPy arrays of sample weights corresponding to the arrays
+in <tt class="docutils literal"><span class="pre">arrays</span></tt>.</p>
 </div></blockquote>
 <p><strong>sample_names</strong> : list of strings, optional (default=None)</p>
 <blockquote>
