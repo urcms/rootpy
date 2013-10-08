@@ -183,12 +183,38 @@
 
 <span class="nd">@snake_case_methods</span>
 <div class="viewcode-block" id="Vector2"><a class="viewcode-back" href="../../reference/generated/rootpy.vector.Vector2.html#rootpy.vector.Vector2">[docs]</a><span class="k">class</span> <span class="nc">Vector2</span><span class="p">(</span><span class="n">_arithmetic_mixin</span><span class="p">,</span> <span class="n">Object</span><span class="p">,</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TVector2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subclass of `ROOT.TVector2 &lt;http://root.cern.ch/root/html/TVector2.html&gt;`_.</span>
 
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from rootpy.vector import Vector2</span>
+<span class="sd">    &gt;&gt;&gt; vect = Vector2(2, 4)</span>
+<span class="sd">    &gt;&gt;&gt; vect</span>
+<span class="sd">    Vector2(x=2.000000, y=4.000000)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_ROOT</span> <span class="o">=</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TVector2</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s">&quot;index {0:d} out of bounds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-        <span class="k">return</span> <span class="s">&#39;{0}({1:f}, {2:f})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="k">return</span> <span class="s">&#39;{0}(x={1:f}, y={2:f})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -218,12 +244,44 @@
 </div>
 <span class="nd">@snake_case_methods</span>
 <div class="viewcode-block" id="Vector3"><a class="viewcode-back" href="../../reference/generated/rootpy.vector.Vector3.html#rootpy.vector.Vector3">[docs]</a><span class="k">class</span> <span class="nc">Vector3</span><span class="p">(</span><span class="n">_arithmetic_mixin</span><span class="p">,</span> <span class="n">Object</span><span class="p">,</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TVector3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subclass of `ROOT.TVector3 &lt;http://root.cern.ch/root/html/TVector3.html&gt;`_.</span>
 
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from rootpy.vector import Vector3</span>
+<span class="sd">    &gt;&gt;&gt; vect = Vector3(1, 2, 3)</span>
+<span class="sd">    &gt;&gt;&gt; vect</span>
+<span class="sd">    Vector3(x=1.000000, y=2.000000, z=3.000000)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_ROOT</span> <span class="o">=</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TVector3</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s">&quot;index {0:d} out of bounds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-        <span class="k">return</span> <span class="s">&#39;{0}({1:f}, {2:f}, {3:f})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="k">return</span> <span class="s">&#39;{0}(x={1:f}, y={2:f}, z={3:f})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -273,12 +331,50 @@
 </div>
 <span class="nd">@snake_case_methods</span>
 <div class="viewcode-block" id="LorentzVector"><a class="viewcode-back" href="../../reference/generated/rootpy.vector.LorentzVector.html#rootpy.vector.LorentzVector">[docs]</a><span class="k">class</span> <span class="nc">LorentzVector</span><span class="p">(</span><span class="n">_arithmetic_mixin</span><span class="p">,</span> <span class="n">Object</span><span class="p">,</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TLorentzVector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subclass of `ROOT.TLorentzVector &lt;http://root.cern.ch/root/html/TLorentzVector.html&gt;`_.</span>
 
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from rootpy.vector import LorentzVector</span>
+<span class="sd">    &gt;&gt;&gt; vect = LorentzVector(1, 2, 3, 4)</span>
+<span class="sd">    &gt;&gt;&gt; vect</span>
+<span class="sd">    LorentzVector(px=1.000000, py=2.000000, pz=3.000000, E=4.000000)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_ROOT</span> <span class="o">=</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TLorentzVector</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">px</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Px</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">py</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Py</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pz</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Pz</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">e</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">E</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Px</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Py</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Pz</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">E</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s">&quot;index {0:d} out of bounds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-        <span class="k">return</span> <span class="s">&quot;{0}({1:f}, {2:f}, {3:f}, {4:f})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="k">return</span> <span class="s">&quot;{0}(px={1:f}, py={2:f}, pz={3:f}, E={4:f})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Px</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Py</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Pz</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">E</span><span class="p">())</span>
 
@@ -297,7 +393,9 @@
 </div>
 <span class="nd">@snake_case_methods</span>
 <div class="viewcode-block" id="Rotation"><a class="viewcode-back" href="../../reference/generated/rootpy.vector.Rotation.html#rootpy.vector.Rotation">[docs]</a><span class="k">class</span> <span class="nc">Rotation</span><span class="p">(</span><span class="n">_arithmetic_mixin</span><span class="p">,</span> <span class="n">Object</span><span class="p">,</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TRotation</span><span class="p">):</span>
-
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subclass of `ROOT.TRotation &lt;http://root.cern.ch/root/html/TRotation.html&gt;`_.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_ROOT</span> <span class="o">=</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TRotation</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -312,7 +410,9 @@
 </div>
 <span class="nd">@snake_case_methods</span>
 <div class="viewcode-block" id="LorentzRotation"><a class="viewcode-back" href="../../reference/generated/rootpy.vector.LorentzRotation.html#rootpy.vector.LorentzRotation">[docs]</a><span class="k">class</span> <span class="nc">LorentzRotation</span><span class="p">(</span><span class="n">_arithmetic_mixin</span><span class="p">,</span> <span class="n">Object</span><span class="p">,</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TLorentzRotation</span><span class="p">):</span>
-
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subclass of `ROOT.TLorentzRotation &lt;http://root.cern.ch/root/html/TLorentzRotation.html&gt;`_.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_ROOT</span> <span class="o">=</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TLorentzRotation</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

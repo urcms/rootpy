@@ -85,7 +85,8 @@
 
     <span class="k">def</span> <span class="nf">to_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Convert this matrix into a ``numpy.matrix``.</span>
+<span class="sd">        Convert this matrix into a</span>
+<span class="sd">        `numpy.matrix &lt;http://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html&gt;`_.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
         <span class="n">cols</span><span class="p">,</span> <span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetNcols</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetNrows</span><span class="p">()</span>
@@ -94,8 +95,18 @@
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">rows</span><span class="p">)])</span>
 
 
-<div class="viewcode-block" id="Matrix"><a class="viewcode-back" href="../../reference/generated/rootpy.matrix.Matrix.html#rootpy.matrix.Matrix">[docs]</a><span class="k">class</span> <span class="nc">Matrix</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Matrix"><a class="viewcode-back" href="../../reference/generated/rootpy.matrix.Matrix.html#rootpy.matrix.Matrix">[docs]</a><span class="k">class</span> <span class="nc">Matrix</span><span class="p">(</span><span class="n">_MatrixBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A factory of subclasses of the template class</span>
+<span class="sd">    `ROOT.TMatrixT &lt;http://root.cern.ch/root/html/TMatrixT_float_.html&gt;`_.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    type : string, optional (default=&#39;float&#39;)</span>
+<span class="sd">        The type of the matrix elements.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">dynamic_cls</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">&#39;float&#39;</span><span class="p">):</span>
 
@@ -112,7 +123,17 @@
 
 </div>
 <div class="viewcode-block" id="SymmetricMatrix"><a class="viewcode-back" href="../../reference/generated/rootpy.matrix.SymmetricMatrix.html#rootpy.matrix.SymmetricMatrix">[docs]</a><span class="k">class</span> <span class="nc">SymmetricMatrix</span><span class="p">(</span><span class="n">Matrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A factory of subclasses of the template class</span>
+<span class="sd">    `ROOT.TMatrixTSym &lt;http://root.cern.ch/root/html/TMatrixTSym_float_.html&gt;`_.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    type : string, optional (default=&#39;float&#39;)</span>
+<span class="sd">        The type of the matrix elements.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">dynamic_cls</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">&#39;float&#39;</span><span class="p">):</span>
 
