@@ -64,27 +64,36 @@
 <span id="example-tree-model-simple-py"></span><h1>A simple tree model<a class="headerlink" href="#a-simple-tree-model" title="Permalink to this headline">¶</a></h1>
 <p>This example demonstrates how to define a simple tree model.</p>
 <p><strong>Python source code:</strong> <a class="reference download internal" href="../../_downloads/model_simple.py"><tt class="xref download docutils literal"><span class="pre">model_simple.py</span></tt></a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">rootpy.tree</span> <span class="kn">import</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">TreeModel</span><span class="p">,</span> <span class="n">FloatCol</span><span class="p">,</span> <span class="n">IntCol</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">rootpy.tree</span> <span class="kn">import</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">TreeModel</span>
+<span class="kn">from</span> <span class="nn">rootpy.tree</span> <span class="kn">import</span> <span class="n">IntCol</span><span class="p">,</span> <span class="n">FloatCol</span><span class="p">,</span> <span class="n">FloatArrayCol</span><span class="p">,</span> <span class="n">CharCol</span><span class="p">,</span> <span class="n">CharArrayCol</span>
 <span class="kn">from</span> <span class="nn">rootpy.io</span> <span class="kn">import</span> <span class="n">root_open</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">gauss</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">gauss</span><span class="p">,</span> <span class="n">choice</span><span class="p">,</span> <span class="n">sample</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">letters</span>
 
 <span class="n">f</span> <span class="o">=</span> <span class="n">root_open</span><span class="p">(</span><span class="s">&quot;test.root&quot;</span><span class="p">,</span> <span class="s">&quot;recreate&quot;</span><span class="p">)</span>
 
 <span class="c"># define the model</span>
 <span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">TreeModel</span><span class="p">):</span>
 
+    <span class="n">s</span> <span class="o">=</span> <span class="n">CharCol</span><span class="p">()</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">CharArrayCol</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
     <span class="n">z</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">FloatArrayCol</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">IntCol</span><span class="p">()</span>
 
 <span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Event</span><span class="p">)</span>
 
 <span class="c"># fill the tree</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">letters</span><span class="p">)</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">string</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sample</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="n">tree</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">gauss</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
     <span class="n">tree</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">gauss</span><span class="p">(</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span>
     <span class="n">tree</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">gauss</span><span class="p">(</span><span class="mf">13.</span><span class="p">,</span> <span class="mf">42.</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">gauss</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
     <span class="n">tree</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="n">i</span>
     <span class="n">tree</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
 <span class="n">tree</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
