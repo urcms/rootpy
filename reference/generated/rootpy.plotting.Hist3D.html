@@ -220,10 +220,51 @@ or input value.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rootpy.plotting.Hist3D.bins_range">
+<tt class="descname">bins_range</tt><big>(</big><em>axis=0</em>, <em>overflow=False</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.bins_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a range of bin indices for iterating along an axis</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>axis</strong> : int, optional (default=1)</p>
+<blockquote>
+<div><p>The axis (0, 1 or 2).</p>
+</div></blockquote>
+<p><strong>overflow</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>If True then include the underflow and overflow bins
+otherwise only include the visible bins.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>an xrange object of bin indices</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist3D.bounds">
+<tt class="descname">bounds</tt><big>(</big><em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the lower and upper bounds of the binning along an axis</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="rootpy.plotting.Hist3D.decorate">
 <tt class="descname">decorate</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.decorate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply style options to a Plottable object.</p>
 <p>Returns a reference to self.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist3D.empty_clone">
+<tt class="descname">empty_clone</tt><big>(</big><em>binning=None</em>, <em>axis=0</em>, <em>type=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.empty_clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new empty histogram. The binning may be modified
+along one axis by specifying the binning and axis arguments.
+If binning is False, then the corresponding axis is dropped
+from the returned histogram.</p>
 </dd></dl>
 
 <dl class="method">
@@ -233,9 +274,21 @@ or input value.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rootpy.plotting.Hist3D.fill_view">
+<tt class="descname">fill_view</tt><big>(</big><em>view</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.fill_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill this histogram from a view of another histogram</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="rootpy.plotting.Hist3D.get_sum_w2">
-<tt class="descname">get_sum_w2</tt><big>(</big><em>x</em>, <em>y=0</em>, <em>z=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.get_sum_w2" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_sum_w2</tt><big>(</big><em>ix</em>, <em>iy=0</em>, <em>iz=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.get_sum_w2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtain the true number of entries in the bin weighted by w^2</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist3D.lowerbound">
+<tt class="descname">lowerbound</tt><big>(</big><em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.lowerbound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the lower bound of the binning along an axis</p>
 </dd></dl>
 
 <dl class="method">
@@ -273,10 +326,9 @@ into one bin.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="rootpy.plotting.Hist3D.new_binning_template">
-<tt class="descname">new_binning_template</tt><big>(</big><em>binning</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.new_binning_template" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a new empty histogram with the binning modified along the
-specified axis</p>
+<dt id="rootpy.plotting.Hist3D.nbins">
+<tt class="descname">nbins</tt><big>(</big><em>axis=0</em>, <em>overflow=False</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.nbins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of bins along an axis</p>
 </dd></dl>
 
 <dl class="method">
@@ -362,7 +414,7 @@ edges along the axis <tt class="docutils literal"><span class="pre">axis</span><
 
 <dl class="method">
 <dt id="rootpy.plotting.Hist3D.set_sum_w2">
-<tt class="descname">set_sum_w2</tt><big>(</big><em>w</em>, <em>x</em>, <em>y=0</em>, <em>z=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.set_sum_w2" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_sum_w2</tt><big>(</big><em>w</em>, <em>ix</em>, <em>iy=0</em>, <em>iz=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.set_sum_w2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the true number of entries in the bin weighted by w^2</p>
 </dd></dl>
 
@@ -424,6 +476,12 @@ treated as equal.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Hist3D.upperbound">
+<tt class="descname">upperbound</tt><big>(</big><em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.upperbound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the upper bound of the binning along an axis</p>
 </dd></dl>
 
 </dd></dl>

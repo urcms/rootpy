@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
 
-    <title>5. Trees and Cuts &mdash; rootpy dev documentation</title>
+    <title>4. Trees and Cuts &mdash; rootpy dev documentation</title>
 
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 
@@ -30,8 +30,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/searchtools.js"></script>
     <link rel="top" title="rootpy dev documentation" href="../index.html" />
-    <link rel="next" title="6. Files" href="files.html" />
-    <link rel="prev" title="4. Plotting" href="plotting.html" /> 
+    <link rel="next" title="5. Files" href="files.html" />
+    <link rel="prev" title="3. Plotting" href="plotting.html" /> 
   </head>
   <body>
     <div class="related">
@@ -44,10 +44,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="files.html" title="6. Files"
+          <a href="files.html" title="5. Files"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plotting.html" title="4. Plotting"
+          <a href="plotting.html" title="3. Plotting"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">rootpy dev documentation</a> &raquo;</li> 
       </ul>
@@ -59,14 +59,14 @@
           <div class="body">
             
   <div class="section" id="trees-and-cuts">
-<span id="id1"></span><h1>5. Trees and Cuts<a class="headerlink" href="#trees-and-cuts" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>4. Trees and Cuts<a class="headerlink" href="#trees-and-cuts" title="Permalink to this headline">¶</a></h1>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">The following documentation is still under construction.</p>
 </div>
 <p>rootpy provides pythonized subclasses for ROOT&#8217;s <tt class="docutils literal"><span class="pre">TTrees</span></tt> and <tt class="docutils literal"><span class="pre">TCuts</span></tt></p>
 <div class="section" id="trees">
-<h2>5.1. Trees<a class="headerlink" href="#trees" title="Permalink to this headline">¶</a></h2>
+<h2>4.1. Trees<a class="headerlink" href="#trees" title="Permalink to this headline">¶</a></h2>
 <p>ROOT&#8217;s TTree is subclassed in rootpy and additional API is introduced to ease
 their creation in Python:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">rootpy.tree</span> <span class="kn">import</span> <span class="n">Tree</span>
@@ -107,7 +107,7 @@ histogram:</p>
 </div>
 </div>
 <div class="section" id="tree-models">
-<h2>5.2. Tree Models<a class="headerlink" href="#tree-models" title="Permalink to this headline">¶</a></h2>
+<h2>4.2. Tree Models<a class="headerlink" href="#tree-models" title="Permalink to this headline">¶</a></h2>
 <p>A more powerful way to create trees is by defining tree models.
 Easily create complex trees by simple class inheritance (inspired by PyTables):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">rootpy.tree</span> <span class="kn">import</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">TreeModel</span><span class="p">,</span> <span class="n">FloatCol</span><span class="p">,</span> <span class="n">IntCol</span>
@@ -149,15 +149,15 @@ tau2_pt -&gt; FloatCol()
 included.</p>
 </div>
 <div class="section" id="tree-objects">
-<h2>5.3. Tree Objects<a class="headerlink" href="#tree-objects" title="Permalink to this headline">¶</a></h2>
+<h2>4.3. Tree Objects<a class="headerlink" href="#tree-objects" title="Permalink to this headline">¶</a></h2>
 <p>Documentation coming soon.</p>
 </div>
 <div class="section" id="tree-chains-and-queues">
-<h2>5.4. Tree Chains and Queues<a class="headerlink" href="#tree-chains-and-queues" title="Permalink to this headline">¶</a></h2>
+<h2>4.4. Tree Chains and Queues<a class="headerlink" href="#tree-chains-and-queues" title="Permalink to this headline">¶</a></h2>
 <p>Documentation coming soon.</p>
 </div>
 <div class="section" id="cuts">
-<h2>5.5. Cuts<a class="headerlink" href="#cuts" title="Permalink to this headline">¶</a></h2>
+<h2>4.5. Cuts<a class="headerlink" href="#cuts" title="Permalink to this headline">¶</a></h2>
 <p>The rootpy <a class="reference internal" href="../reference/generated/rootpy.tree.Cut.html#rootpy.tree.Cut" title="rootpy.tree.Cut"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.tree.Cut</span></tt></a> class inherits from <tt class="docutils literal"><span class="pre">ROOT.TCut</span></tt> and
 implements logical operators so cuts can be easily combined:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">rootpy.tree</span> <span class="kn">import</span> <span class="n">Cut</span>
@@ -185,7 +185,7 @@ implements logical operators so cuts can be easily combined:</p>
 </div>
 </div>
 <div class="section" id="categories">
-<h2>5.6. Categories<a class="headerlink" href="#categories" title="Permalink to this headline">¶</a></h2>
+<h2>4.6. Categories<a class="headerlink" href="#categories" title="Permalink to this headline">¶</a></h2>
 <p>rootpy introduces a new mechanism with <a class="reference internal" href="../reference/generated/rootpy.tree.Categories.html#rootpy.tree.Categories" title="rootpy.tree.Categories"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.tree.Categories</span></tt></a>
 to ease the creation of cuts that describe non-overlapping categories.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rootpy.tree.categories</span> <span class="kn">import</span> <span class="n">Categories</span>
@@ -225,23 +225,23 @@ to ease the creation of cuts that describe non-overlapping categories.</p>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">5. Trees and Cuts</a><ul>
-<li><a class="reference internal" href="#trees">5.1. Trees</a></li>
-<li><a class="reference internal" href="#tree-models">5.2. Tree Models</a></li>
-<li><a class="reference internal" href="#tree-objects">5.3. Tree Objects</a></li>
-<li><a class="reference internal" href="#tree-chains-and-queues">5.4. Tree Chains and Queues</a></li>
-<li><a class="reference internal" href="#cuts">5.5. Cuts</a></li>
-<li><a class="reference internal" href="#categories">5.6. Categories</a></li>
+<li><a class="reference internal" href="#">4. Trees and Cuts</a><ul>
+<li><a class="reference internal" href="#trees">4.1. Trees</a></li>
+<li><a class="reference internal" href="#tree-models">4.2. Tree Models</a></li>
+<li><a class="reference internal" href="#tree-objects">4.3. Tree Objects</a></li>
+<li><a class="reference internal" href="#tree-chains-and-queues">4.4. Tree Chains and Queues</a></li>
+<li><a class="reference internal" href="#cuts">4.5. Cuts</a></li>
+<li><a class="reference internal" href="#categories">4.6. Categories</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="plotting.html"
-                        title="previous chapter">4. Plotting</a></p>
+                        title="previous chapter">3. Plotting</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="files.html"
-                        title="next chapter">6. Files</a></p>
+                        title="next chapter">5. Files</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/modules/trees.txt"
@@ -274,10 +274,10 @@ to ease the creation of cuts that describe non-overlapping categories.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="files.html" title="6. Files"
+          <a href="files.html" title="5. Files"
              >next</a> |</li>
         <li class="right" >
-          <a href="plotting.html" title="4. Plotting"
+          <a href="plotting.html" title="3. Plotting"
              >previous</a> |</li>
         <li><a href="../index.html">rootpy dev documentation</a> &raquo;</li> 
       </ul>
