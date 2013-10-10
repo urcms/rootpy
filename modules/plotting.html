@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
 
-    <title>3. Plotting &mdash; rootpy dev documentation</title>
+    <title>4. Plotting &mdash; rootpy dev documentation</title>
 
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 
@@ -30,8 +30,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/searchtools.js"></script>
     <link rel="top" title="rootpy dev documentation" href="../index.html" />
-    <link rel="next" title="4. Trees and Cuts" href="trees.html" />
-    <link rel="prev" title="2. Simple Integration into Existing Applications" href="ROOT.html" /> 
+    <link rel="next" title="5. Trees and Cuts" href="trees.html" />
+    <link rel="prev" title="3. Simple Integration into Existing Applications" href="ROOT.html" /> 
   </head>
   <body>
     <div class="related">
@@ -44,10 +44,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="trees.html" title="4. Trees and Cuts"
+          <a href="trees.html" title="5. Trees and Cuts"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="ROOT.html" title="2. Simple Integration into Existing Applications"
+          <a href="ROOT.html" title="3. Simple Integration into Existing Applications"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">rootpy dev documentation</a> &raquo;</li> 
       </ul>
@@ -59,11 +59,11 @@
           <div class="body">
             
   <div class="section" id="plotting">
-<span id="id1"></span><h1>3. Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>4. Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h1>
 <p>rootpy provides a more pythonic interface for histograms, graphs, canvases and
 plotting styles.</p>
 <div class="section" id="histograms">
-<h2>3.1. Histograms<a class="headerlink" href="#histograms" title="Permalink to this headline">¶</a></h2>
+<h2>4.1. Histograms<a class="headerlink" href="#histograms" title="Permalink to this headline">¶</a></h2>
 <p>rootpy simplifies ROOT&#8217;s histogram class hierarchy into three classes:
 <tt class="docutils literal"><span class="pre">Hist</span></tt>, <tt class="docutils literal"><span class="pre">Hist2D</span></tt>, and <tt class="docutils literal"><span class="pre">Hist3D</span></tt>. These classes dynamically inherit from
 the corresponding ROOT histogram class depending on the value of the <tt class="docutils literal"><span class="pre">type</span></tt>
@@ -143,7 +143,7 @@ histograms:</p>
 <p>Any additional keyword arguments are use to set style attributes of the
 histogram, such as the line color, fill style, etc.</p>
 <div class="section" id="slicing">
-<h3>3.1.1. Slicing<a class="headerlink" href="#slicing" title="Permalink to this headline">¶</a></h3>
+<h3>4.1.1. Slicing<a class="headerlink" href="#slicing" title="Permalink to this headline">¶</a></h3>
 <p>Histogram <tt class="docutils literal"><span class="pre">__getitem__</span></tt> and <tt class="docutils literal"><span class="pre">__setitem__</span></tt> methods support slicing by global
 bin index or along each axis separately.</p>
 <p>Access contents and errors:</p>
@@ -183,7 +183,8 @@ the sliced view:</p>
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>If a slice is requested, then a HistIndexView or Hist[2D|3D]View is returned:</p>
+<p>If a slice is requested, then a <tt class="docutils literal"><span class="pre">HistIndexView</span></tt> or <tt class="docutils literal"><span class="pre">Hist[2D|3D]View</span></tt> is
+returned:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[:]</span>
 <span class="go">HistIndexView(Hist3D(&#39;5a8e7fbe8ff54be6be18709220b3da31&#39;), idx=[start=None, stop=None, step=None])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[:,:,:]</span>
@@ -218,7 +219,7 @@ of a slice translates to a rebinning along the associated axis:</p>
 </div>
 </div>
 <div class="section" id="plotting-style">
-<h2>3.2. Plotting Style<a class="headerlink" href="#plotting-style" title="Permalink to this headline">¶</a></h2>
+<h2>4.2. Plotting Style<a class="headerlink" href="#plotting-style" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">The following documentation is still under construction.</p>
@@ -260,22 +261,22 @@ SVG names:</p>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">3. Plotting</a><ul>
-<li><a class="reference internal" href="#histograms">3.1. Histograms</a><ul>
-<li><a class="reference internal" href="#slicing">3.1.1. Slicing</a></li>
+<li><a class="reference internal" href="#">4. Plotting</a><ul>
+<li><a class="reference internal" href="#histograms">4.1. Histograms</a><ul>
+<li><a class="reference internal" href="#slicing">4.1.1. Slicing</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#plotting-style">3.2. Plotting Style</a></li>
+<li><a class="reference internal" href="#plotting-style">4.2. Plotting Style</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="ROOT.html"
-                        title="previous chapter">2. Simple Integration into Existing Applications</a></p>
+                        title="previous chapter">3. Simple Integration into Existing Applications</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="trees.html"
-                        title="next chapter">4. Trees and Cuts</a></p>
+                        title="next chapter">5. Trees and Cuts</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/modules/plotting.txt"
@@ -308,10 +309,10 @@ SVG names:</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="trees.html" title="4. Trees and Cuts"
+          <a href="trees.html" title="5. Trees and Cuts"
              >next</a> |</li>
         <li class="right" >
-          <a href="ROOT.html" title="2. Simple Integration into Existing Applications"
+          <a href="ROOT.html" title="3. Simple Integration into Existing Applications"
              >previous</a> |</li>
         <li><a href="../index.html">rootpy dev documentation</a> &raquo;</li> 
       </ul>

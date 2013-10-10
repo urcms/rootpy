@@ -137,7 +137,8 @@ If a single index is requested then a ``BinProxy`` is returned::
    >>> a[1,5,6].overflow
    False
 
-If a slice is requested, then a HistIndexView or Hist[2D|3D]View is returned::
+If a slice is requested, then a ``HistIndexView`` or ``Hist[2D|3D]View`` is
+returned::
 
    >>> a[:]
    HistIndexView(Hist3D('5a8e7fbe8ff54be6be18709220b3da31'), idx=[start=None, stop=None, step=None])

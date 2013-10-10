@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
 
-    <title>5. Files &mdash; rootpy dev documentation</title>
+    <title>6. Files &mdash; rootpy dev documentation</title>
 
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 
@@ -30,8 +30,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/searchtools.js"></script>
     <link rel="top" title="rootpy dev documentation" href="../index.html" />
-    <link rel="next" title="6. Logging" href="logger.html" />
-    <link rel="prev" title="4. Trees and Cuts" href="trees.html" /> 
+    <link rel="next" title="7. Logging" href="logger.html" />
+    <link rel="prev" title="5. Trees and Cuts" href="trees.html" /> 
   </head>
   <body>
     <div class="related">
@@ -44,10 +44,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="logger.html" title="6. Logging"
+          <a href="logger.html" title="7. Logging"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="trees.html" title="4. Trees and Cuts"
+          <a href="trees.html" title="5. Trees and Cuts"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">rootpy dev documentation</a> &raquo;</li> 
       </ul>
@@ -59,9 +59,9 @@
           <div class="body">
             
   <div class="section" id="files">
-<span id="id1"></span><h1>5. Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>6. Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="opening-root-files-with-rootpy-io-root-open">
-<h2>5.1. Opening ROOT files with <a class="reference internal" href="../reference/generated/rootpy.io.root_open.html#rootpy.io.root_open" title="rootpy.io.root_open"><tt class="xref py py-func docutils literal"><span class="pre">rootpy.io.root_open()</span></tt></a><a class="headerlink" href="#opening-root-files-with-rootpy-io-root-open" title="Permalink to this headline">¶</a></h2>
+<h2>6.1. Opening ROOT files with <a class="reference internal" href="../reference/generated/rootpy.io.root_open.html#rootpy.io.root_open" title="rootpy.io.root_open"><tt class="xref py py-func docutils literal"><span class="pre">rootpy.io.root_open()</span></tt></a><a class="headerlink" href="#opening-root-files-with-rootpy-io-root-open" title="Permalink to this headline">¶</a></h2>
 <p>rootpy provides the <a class="reference internal" href="../reference/generated/rootpy.io.root_open.html#rootpy.io.root_open" title="rootpy.io.root_open"><tt class="xref py py-func docutils literal"><span class="pre">rootpy.io.root_open()</span></tt></a> function that internally uses
 ROOT&#8217;s <tt class="docutils literal"><span class="pre">TFile::Open</span></tt>, but instead returns a <a class="reference internal" href="../reference/generated/rootpy.io.File.html#rootpy.io.File" title="rootpy.io.File"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.io.File</span></tt></a> object.
 For example:</p>
@@ -97,7 +97,7 @@ context manager:</p>
 can be accesses as attributes (<tt class="docutils literal"><span class="pre">myfile.somedirectory.histname</span></tt>).</p>
 </div>
 <div class="section" id="utilities">
-<h2>5.2. Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<h2>6.2. Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
 <p>rootpy files can be &#8220;walked&#8221; in a similar way to Python&#8217;s <tt class="docutils literal"><span class="pre">os.walk()</span></tt>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">rootpy.testdata</span> <span class="kn">import</span> <span class="n">get_file</span>
 
@@ -124,7 +124,7 @@ efficiencies [] [&#39;hist1&#39;, &#39;hist3&#39;, &#39;hist2&#39;, &#39;hist4&#
 <p>Also see <a class="reference internal" href="../reference/io.html#module-rootpy.io" title="rootpy.io"><tt class="xref py py-mod docutils literal"><span class="pre">rootpy.io</span></tt></a>.</p>
 </div>
 <div class="section" id="temporary-files">
-<h2>5.3. Temporary Files<a class="headerlink" href="#temporary-files" title="Permalink to this headline">¶</a></h2>
+<h2>6.3. Temporary Files<a class="headerlink" href="#temporary-files" title="Permalink to this headline">¶</a></h2>
 <p>rootpy provides a <a class="reference internal" href="../reference/generated/rootpy.io.TemporaryFile.html#rootpy.io.TemporaryFile" title="rootpy.io.TemporaryFile"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.io.TemporaryFile</span></tt></a> that when closed is
 automatically deleted from the filesystem. This may be useful when creating
 temporary objects, such as trees copied with a selection that are no longer
@@ -143,20 +143,20 @@ needed after the termination of the program.</p>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">5. Files</a><ul>
-<li><a class="reference internal" href="#opening-root-files-with-rootpy-io-root-open">5.1. Opening ROOT files with <tt class="docutils literal"><span class="pre">rootpy.io.root_open()</span></tt></a></li>
-<li><a class="reference internal" href="#utilities">5.2. Utilities</a></li>
-<li><a class="reference internal" href="#temporary-files">5.3. Temporary Files</a></li>
+<li><a class="reference internal" href="#">6. Files</a><ul>
+<li><a class="reference internal" href="#opening-root-files-with-rootpy-io-root-open">6.1. Opening ROOT files with <tt class="docutils literal"><span class="pre">rootpy.io.root_open()</span></tt></a></li>
+<li><a class="reference internal" href="#utilities">6.2. Utilities</a></li>
+<li><a class="reference internal" href="#temporary-files">6.3. Temporary Files</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="trees.html"
-                        title="previous chapter">4. Trees and Cuts</a></p>
+                        title="previous chapter">5. Trees and Cuts</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="logger.html"
-                        title="next chapter">6. Logging</a></p>
+                        title="next chapter">7. Logging</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/modules/files.txt"
@@ -189,10 +189,10 @@ needed after the termination of the program.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="logger.html" title="6. Logging"
+          <a href="logger.html" title="7. Logging"
              >next</a> |</li>
         <li class="right" >
-          <a href="trees.html" title="4. Trees and Cuts"
+          <a href="trees.html" title="5. Trees and Cuts"
              >previous</a> |</li>
         <li><a href="../index.html">rootpy dev documentation</a> &raquo;</li> 
       </ul>
