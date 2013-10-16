@@ -252,6 +252,47 @@ otherwise only include the visible bins.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rootpy.plotting.Hist3D.check_compatibility">
+<tt class="descname">check_compatibility</tt><big>(</big><em>other</em>, <em>check_edges=False</em>, <em>precision=1e-07</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.check_compatibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether two histograms are considered compatible by the number of
+dimensions, number of bins along each axis, and optionally the bin
+edges.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>other</strong> : histogram</p>
+<blockquote>
+<div><p>A rootpy histogram</p>
+</div></blockquote>
+<p><strong>check_edges</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>If True then also check that the bin edges are equal within
+the specified precision.</p>
+</div></blockquote>
+<p><strong>precision</strong> : float, optional (default=1E-7)</p>
+<blockquote>
+<div><p>The value below which differences between floats are treated as
+nil when comparing bin edges.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>TypeError</strong> :</p>
+<blockquote>
+<div><p>If the histogram dimensionalities do not match</p>
+</div></blockquote>
+<p><strong>ValueError</strong> :</p>
+<blockquote class="last">
+<div><p>If the histogram sizes, number of bins along an axis, or
+optionally the bin edges do not match</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="rootpy.plotting.Hist3D.decorate">
 <tt class="descname">decorate</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist3D.decorate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply style options to a Plottable object.</p>

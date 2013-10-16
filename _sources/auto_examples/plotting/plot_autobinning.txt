@@ -29,20 +29,20 @@ The automatic binning requires numpy/scipy
   		sturges-doane               21   0.00  
   		scott                       10   0.00  
   		sqrt                        15   0.00  
-  		doane                       10   0.09  
-  		freedman-diaconis           12   0.00  
-  		risk                        15   0.01  
-  		knuth                       15   0.01  
+  		doane                       10   0.10  
+  		freedman-diaconis           14   0.00  
+  		risk                        13   0.01  
+  		knuth                       16   0.01  
   normal
   		manual1                     50   0.07  
   		sturges                     18   0.07  
   		sturges-doane               87   0.07  
-  		scott                      113   0.07  
+  		scott                      116   0.07  
   		sqrt                       317   0.07  
-  		doane                       19   0.08  
-  		freedman-diaconis          145   0.08  
-  		risk                       318   0.63  
-  		knuth                      252   0.52
+  		doane                       18   0.08  
+  		freedman-diaconis          149   0.07  
+  		risk                       296   0.70  
+  		knuth                      252   0.54
 
 
 
@@ -51,5 +51,5 @@ The automatic binning requires numpy/scipy
 .. literalinclude:: plot_autobinning.py
     :lines: 13-
 
-**Total running time of the example:**  1.83 seconds
+**Total running time of the example:**  1.92 seconds
     
