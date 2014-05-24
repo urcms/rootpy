@@ -77,7 +77,6 @@
 <span class="k">class</span> <span class="nc">_arithmetic_mixin</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">try</span><span class="p">:</span>
             <span class="n">prod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__bases__</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prod</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__bases__</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
@@ -89,7 +88,6 @@
         <span class="k">return</span> <span class="n">prod</span>
 
     <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;Attemping to set vector to scalar quantity&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -102,7 +100,6 @@
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="n">other</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
@@ -111,7 +108,6 @@
                     <span class="n">other</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="n">other</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -124,7 +120,6 @@
         <span class="k">return</span> <span class="n">clone</span>
 
     <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="n">other</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
@@ -132,7 +127,6 @@
                 <span class="n">other</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">try</span><span class="p">:</span>
             <span class="n">_sum</span> <span class="o">=</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">other</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
@@ -143,7 +137,6 @@
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="n">other</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -156,7 +149,6 @@
         <span class="k">return</span> <span class="n">clone</span>
 
     <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="n">other</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
@@ -164,7 +156,6 @@
                     <span class="n">other</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">try</span><span class="p">:</span>
             <span class="n">diff</span> <span class="o">=</span> <span class="bp">self</span> <span class="o">-</span> <span class="n">other</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
@@ -175,7 +166,6 @@
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="n">_copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__bases__</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">](</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">_copy</span><span class="o">.</span><span class="n">__class__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span>
         <span class="k">return</span> <span class="n">_copy</span>
@@ -213,12 +203,10 @@
         <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s">&quot;index {0:d} out of bounds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="k">return</span> <span class="s">&#39;{0}(x={1:f}, y={2:f})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">):</span>
             <span class="n">prod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">()</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">X</span><span class="p">()</span> <span class="o">+</span> \
                    <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span>
@@ -231,7 +219,6 @@
         <span class="k">return</span> <span class="n">prod</span>
 
     <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TVector2</span><span class="p">):</span>
             <span class="n">_sum</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">()</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">X</span><span class="p">(),</span>
                            <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">Y</span><span class="p">())</span>
@@ -280,18 +267,15 @@
         <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s">&quot;index {0:d} out of bounds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="k">return</span> <span class="s">&#39;{0}(x={1:f}, y={2:f}, z={3:f})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LorentzVector</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TVector3</span><span class="o">.</span><span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TVector3</span><span class="p">):</span>
             <span class="n">prod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">()</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">X</span><span class="p">()</span> <span class="o">+</span> \
                    <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span> <span class="o">+</span> \
@@ -305,7 +289,6 @@
         <span class="k">return</span> <span class="n">prod</span>
 
     <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TVector3</span><span class="p">):</span>
             <span class="n">_sum</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">()</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">X</span><span class="p">(),</span>
                            <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">Y</span><span class="p">(),</span>
@@ -317,7 +300,6 @@
         <span class="k">return</span> <span class="n">_sum</span>
 
     <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TVector3</span><span class="p">):</span>
             <span class="n">_dif</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">()</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">X</span><span class="p">(),</span>
                            <span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">()</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">Y</span><span class="p">(),</span>
@@ -373,19 +355,16 @@
         <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s">&quot;index {0:d} out of bounds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="k">return</span> <span class="s">&quot;{0}(px={1:f}, py={2:f}, pz={3:f}, E={4:f})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Px</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Py</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Pz</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">E</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TLorentzVector</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TLorentzVector</span><span class="o">.</span><span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">Vect</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TLorentzVector</span><span class="o">.</span><span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">BoostVector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="n">vector</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TLorentzVector</span><span class="o">.</span><span class="n">BoostVector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">vector</span><span class="o">.</span><span class="n">__class__</span> <span class="o">=</span> <span class="n">Vector3</span>
         <span class="k">return</span> <span class="n">vector</span>
@@ -399,7 +378,6 @@
     <span class="n">_ROOT</span> <span class="o">=</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TRotation</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="k">return</span> <span class="p">(</span><span class="s">&quot;[[{0:f}, {1:f}, {2:f}],</span><span class="se">\n</span><span class="s">&quot;</span>
                 <span class="s">&quot; [{3:f}, {4:f}, {5:f}],</span><span class="se">\n</span><span class="s">&quot;</span>
                 <span class="s">&quot; [{6:f}, {7:f}, {8:f}]]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -416,7 +394,6 @@
     <span class="n">_ROOT</span> <span class="o">=</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TLorentzRotation</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="k">return</span> <span class="p">(</span><span class="s">&quot;[[{0:f},  {1:f},  {2:f},  {3:f}],</span><span class="se">\n</span><span class="s">&quot;</span>
                 <span class="s">&quot; [{4:f},  {5:f},  {6:f},  {7:f}],</span><span class="se">\n</span><span class="s">&quot;</span>
                 <span class="s">&quot; [{8:f},  {9:f},  {10:f},  {11:f}],</span><span class="se">\n</span><span class="s">&quot;</span>
@@ -466,7 +443,7 @@
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

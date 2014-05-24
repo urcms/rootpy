@@ -7,8 +7,8 @@
 Draw a Quantile-Quantile Plot and Confidence Band
 =================================================
 
-This is an example of drawing a quantile-quantile plot with a
-confidential level (CL) band, originally by Zhiyi Liu, zhiyil@fnal.gov
+This is an example of drawing a quantile-quantile plot with a confidence level
+(CL) band.
 
 
 
@@ -23,5 +23,5 @@ confidential level (CL) band, originally by Zhiyi Liu, zhiyil@fnal.gov
 .. literalinclude:: plot_quantiles.py
     :lines: 11-
 
-**Total running time of the example:**  0.10 seconds
+**Total running time of the example:**  0.12 seconds
     

@@ -1,7 +1,0 @@
-rootpy.stats.histfactory.make_models
-====================================
-
-.. currentmodule:: rootpy.stats.histfactory
-
-.. autofunction:: make_models
-

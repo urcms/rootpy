@@ -63,12 +63,11 @@
 <p>This module provides functions that allow the plotting of ROOT histograms and
 graphs with <a class="reference external" href="http://matplotlib.org/">matplotlib</a>.</p>
 <p>If you just want to save image files and don&#8217;t want matplotlib to attempt to
-create a graphical window you can do this while importing matplotlib for the
-first time (i.e. before importing rootpy.plotting.root2matplotlib):</p>
+create a graphical window, tell matplotlib to use a non-interactive backend
+such as <tt class="docutils literal"><span class="pre">Agg</span></tt> when importing it for the first time (i.e. before importing
+rootpy.plotting.root2matplotlib):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s">&#39;Agg&#39;</span><span class="p">)</span> <span class="c"># do this before importing pyplot</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s">&#39;Agg&#39;</span><span class="p">)</span> <span class="c"># do this before importing pyplot or root2matplotlib</span>
 </pre></div>
 </div>
 <p>This puts matplotlib in a batch state similar to <tt class="docutils literal"><span class="pre">ROOT.gROOT.SetBatch(True)</span></tt>.</p>
@@ -81,13 +80,13 @@ first time (i.e. before importing rootpy.plotting.root2matplotlib):</p>
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="generated/rootpy.plotting.root2matplotlib.hist.html#rootpy.plotting.root2matplotlib.hist" title="rootpy.plotting.root2matplotlib.hist"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.root2matplotlib.hist</span></tt></a>(hists[,&nbsp;...])</td>
-<td>Make a matplotlib hist plot from a ROOT histogram, stack or</td>
+<td>Make a matplotlib hist plot from a ROOT histogram, stack or list of histograms.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/rootpy.plotting.root2matplotlib.bar.html#rootpy.plotting.root2matplotlib.bar" title="rootpy.plotting.root2matplotlib.bar"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.root2matplotlib.bar</span></tt></a>(hists[,&nbsp;...])</td>
-<td>Make a matplotlib bar plot from a ROOT histogram, stack or</td>
+<td>Make a matplotlib bar plot from a ROOT histogram, stack or list of histograms.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/rootpy.plotting.root2matplotlib.errorbar.html#rootpy.plotting.root2matplotlib.errorbar" title="rootpy.plotting.root2matplotlib.errorbar"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.root2matplotlib.errorbar</span></tt></a>(hists[,&nbsp;...])</td>
-<td>Make a matplotlib errorbar plot from a ROOT histogram or graph</td>
+<td>Make a matplotlib errorbar plot from a ROOT histogram or graph or list of histograms and graphs.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/rootpy.plotting.root2matplotlib.fill_between.html#rootpy.plotting.root2matplotlib.fill_between" title="rootpy.plotting.root2matplotlib.fill_between"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.root2matplotlib.fill_between</span></tt></a>(a,&nbsp;b)</td>
 <td>Fill the region between two histograms or graphs.</td>
@@ -121,9 +120,7 @@ first time (i.e. before importing rootpy.plotting.root2matplotlib):</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">rootpy.plotting.root2matplotlib</span></tt>: matplotlib Interface</a><ul>
-<li><a class="reference internal" href="#functions">Functions</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
 </li>
 </ul>
@@ -175,7 +172,7 @@ first time (i.e. before importing rootpy.plotting.root2matplotlib):</p>
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

@@ -8,8 +8,6 @@ This example demonstrates how to convert a Tree into a NumPy ndarray or
 recarray.
 """
 print __doc__
-import rootpy
-rootpy.log.basic_config_colorized()
 from rootpy.tree import Tree, TreeModel, FloatCol, IntCol
 from rootpy.io import root_open
 from random import gauss
@@ -20,7 +18,6 @@ f = root_open("test.root", "recreate")
 
 # define the model
 class Event(TreeModel):
-
     x = FloatCol()
     y = FloatCol()
     z = FloatCol()

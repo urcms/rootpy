@@ -32,7 +32,7 @@
     <link rel="top" title="rootpy dev documentation" href="../../index.html" />
     <link rel="up" title="rootpy.stats.histfactory: HistFactory" href="../stats.histfactory.html" />
     <link rel="next" title="rootpy.stats.histfactory.measurements_from_xml" href="rootpy.stats.histfactory.measurements_from_xml.html" />
-    <link rel="prev" title="rootpy.stats.histfactory.make_model" href="rootpy.stats.histfactory.make_model.html" /> 
+    <link rel="prev" title="rootpy.stats.histfactory.make_measurement" href="rootpy.stats.histfactory.make_measurement.html" /> 
   </head>
   <body>
     <div class="related">
@@ -48,7 +48,7 @@
           <a href="rootpy.stats.histfactory.measurements_from_xml.html" title="rootpy.stats.histfactory.measurements_from_xml"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="rootpy.stats.histfactory.make_model.html" title="rootpy.stats.histfactory.make_model"
+          <a href="rootpy.stats.histfactory.make_measurement.html" title="rootpy.stats.histfactory.make_measurement"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
           <li><a href="../stats.histfactory.html" accesskey="U"><tt class="docutils literal"><span class="pre">rootpy.stats.histfactory</span></tt>: HistFactory</a> &raquo;</li> 
@@ -64,8 +64,11 @@
 <h1>rootpy.stats.histfactory.make_workspace<a class="headerlink" href="#rootpy-stats-histfactory-make-workspace" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="rootpy.stats.histfactory.make_workspace">
-<tt class="descclassname">rootpy.stats.histfactory.</tt><tt class="descname">make_workspace</tt><big>(</big><em>name</em>, <em>channels</em>, <em>lumi=1.0</em>, <em>lumi_rel_error=0.0</em>, <em>output_prefix='./histfactory'</em>, <em>POI=None</em>, <em>const_params=None</em>, <em>silence=False</em><big>)</big><a class="headerlink" href="#rootpy.stats.histfactory.make_workspace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a workspace from a list of channels</p>
+<tt class="descclassname">rootpy.stats.histfactory.</tt><tt class="descname">make_workspace</tt><big>(</big><em>measurement</em>, <em>channel=None</em>, <em>name=None</em>, <em>silence=False</em><big>)</big><a class="headerlink" href="#rootpy.stats.histfactory.make_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a workspace containing the model for a measurement</p>
+<p>If <cite>channel</cite> is None then include all channels in the model</p>
+<p>If <cite>silence</cite> is True, then silence HistFactory&#8217;s output on
+stdout and stderr.</p>
 </dd></dl>
 
 </div>
@@ -80,8 +83,8 @@
               <img class="logo" src="../../_static/rootpy-logo-80dpi.png" alt="Logo"/>
             </a></p>
   <h4>Previous topic</h4>
-  <p class="topless"><a href="rootpy.stats.histfactory.make_model.html"
-                        title="previous chapter">rootpy.stats.histfactory.make_model</a></p>
+  <p class="topless"><a href="rootpy.stats.histfactory.make_measurement.html"
+                        title="previous chapter">rootpy.stats.histfactory.make_measurement</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="rootpy.stats.histfactory.measurements_from_xml.html"
                         title="next chapter">rootpy.stats.histfactory.measurements_from_xml</a></p>
@@ -120,14 +123,14 @@
           <a href="rootpy.stats.histfactory.measurements_from_xml.html" title="rootpy.stats.histfactory.measurements_from_xml"
              >next</a> |</li>
         <li class="right" >
-          <a href="rootpy.stats.histfactory.make_model.html" title="rootpy.stats.histfactory.make_model"
+          <a href="rootpy.stats.histfactory.make_measurement.html" title="rootpy.stats.histfactory.make_measurement"
              >previous</a> |</li>
         <li><a href="../../index.html">rootpy dev documentation</a> &raquo;</li>
           <li><a href="../stats.histfactory.html" ><tt class="docutils literal"><span class="pre">rootpy.stats.histfactory</span></tt>: HistFactory</a> &raquo;</li> 
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

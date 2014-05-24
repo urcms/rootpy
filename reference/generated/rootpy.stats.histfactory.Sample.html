@@ -64,8 +64,36 @@
 <h1>rootpy.stats.histfactory.Sample<a class="headerlink" href="#rootpy-stats-histfactory-sample" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="rootpy.stats.histfactory.Sample">
-<em class="property">class </em><tt class="descclassname">rootpy.stats.histfactory.</tt><tt class="descname">Sample</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#rootpy.stats.histfactory.Sample" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">class </em><tt class="descclassname">rootpy.stats.histfactory.</tt><tt class="descname">Sample</tt><big>(</big><em>name</em>, <em>hist=None</em><big>)</big><a class="headerlink" href="#rootpy.stats.histfactory.Sample" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="rootpy.stats.histfactory.Sample.iter_sys">
+<tt class="descname">iter_sys</tt><big>(</big><big>)</big><a class="headerlink" href="#rootpy.stats.histfactory.Sample.iter_sys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over sys_name, overall_sys, histo_sys.
+overall_sys or histo_sys may be None for any given sys_name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.stats.histfactory.Sample.sys_hist">
+<tt class="descname">sys_hist</tt><big>(</big><em>name=None</em><big>)</big><a class="headerlink" href="#rootpy.stats.histfactory.Sample.sys_hist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the effective low and high histogram for a given systematic.
+If this sample does not contain the named systematic then return
+the nominal histogram for both low and high variations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.stats.histfactory.Sample.sys_names">
+<tt class="descname">sys_names</tt><big>(</big><big>)</big><a class="headerlink" href="#rootpy.stats.histfactory.Sample.sys_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of unique systematic names from OverallSys and HistoSys</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.stats.histfactory.Sample.total">
+<tt class="descname">total</tt><big>(</big><em>xbin1=1</em>, <em>xbin2=-2</em><big>)</big><a class="headerlink" href="#rootpy.stats.histfactory.Sample.total" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total yield and its associated statistical and
+systematic uncertainties.</p>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 
@@ -126,7 +154,7 @@
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

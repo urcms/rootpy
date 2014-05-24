@@ -61,9 +61,7 @@
 <p>This example demonstrates how to fill and read trees with branches containing
 user-defined types.</p>
 <p><strong>Python source code:</strong> <a class="reference download internal" href="../../_downloads/user_object.py"><tt class="xref download docutils literal"><span class="pre">user_object.py</span></tt></a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">rootpy</span>
-<span class="n">rootpy</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">basic_config_colorized</span><span class="p">()</span>
-<span class="kn">from</span> <span class="nn">rootpy.tree</span> <span class="kn">import</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">TreeModel</span><span class="p">,</span> <span class="n">IntCol</span><span class="p">,</span> <span class="n">ObjectCol</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">rootpy.tree</span> <span class="kn">import</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">TreeModel</span><span class="p">,</span> <span class="n">IntCol</span><span class="p">,</span> <span class="n">ObjectCol</span>
 <span class="kn">from</span> <span class="nn">rootpy.io</span> <span class="kn">import</span> <span class="n">root_open</span>
 <span class="kn">import</span> <span class="nn">rootpy.compiled</span> <span class="kn">as</span> <span class="nn">C</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">gauss</span>
@@ -84,7 +82,6 @@ user-defined types.</p>
 
 <span class="c"># define the model</span>
 <span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">TreeModel</span><span class="p">):</span>
-
     <span class="n">event_number</span> <span class="o">=</span> <span class="n">IntCol</span><span class="p">()</span>
     <span class="n">thingy</span> <span class="o">=</span> <span class="n">ObjectCol</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">Thingy</span><span class="p">)</span>
 
@@ -105,9 +102,7 @@ user-defined types.</p>
 
 <span class="c"># now to read the same tree</span>
 <span class="k">with</span> <span class="n">root_open</span><span class="p">(</span><span class="s">&quot;test.root&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-
     <span class="n">tree</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">test</span>
-
     <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">tree</span><span class="p">:</span>
         <span class="n">thing</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">thingy</span>
         <span class="k">print</span> <span class="n">event</span><span class="o">.</span><span class="n">event_number</span><span class="p">,</span> <span class="n">thing</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">thing</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">thing</span><span class="o">.</span><span class="n">y</span>
@@ -166,7 +161,7 @@ user-defined types.</p>
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

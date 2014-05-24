@@ -63,25 +63,30 @@
 <div class="section" id="try-rootpy-on-cern-s-lxplus">
 <h2>2.1. Try <cite>rootpy</cite> on <a class="reference external" href="http://information-technology.web.cern.ch/services/lxplus-service">CERN&#8217;s LXPLUS</a><a class="headerlink" href="#try-rootpy-on-cern-s-lxplus" title="Permalink to this headline">¶</a></h2>
 <p>First, <a class="reference external" href="http://root.cern.ch/drupal/content/starting-root">set up ROOT</a>:</p>
-<div class="highlight-python"><pre>source /afs/cern.ch/sw/lcg/contrib/gcc/4.3/x86_64-slc5/setup.sh &amp;&amp;\
+<div class="highlight-python"><div class="highlight"><pre>source /afs/cern.ch/sw/lcg/contrib/gcc/4.3/x86_64-slc5/setup.sh &amp;&amp;\
 cd /afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.00/x86_64-slc5-gcc43-opt/root &amp;&amp;\
 source bin/thisroot.sh &amp;&amp;\
-cd -</pre>
+cd -
+</pre></div>
 </div>
 <p>Then, create and activate a <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">virtualenv</a> (change <cite>my_env</cite> at your will):</p>
-<div class="highlight-python"><pre>virtualenv my_env # necessary only the first time
-source my_env/bin/activate</pre>
+<div class="highlight-python"><div class="highlight"><pre>virtualenv my_env # necessary only the first time
+source my_env/bin/activate
+</pre></div>
 </div>
 <p>Get the <a class="reference external" href="https://github.com/rootpy/rootpy#getting-the-latest-source">latest source</a>:</p>
-<div class="highlight-python"><pre>git clone https://github.com/rootpy/rootpy.git</pre>
+<div class="highlight-python"><div class="highlight"><pre>git clone https://github.com/rootpy/rootpy.git
+</pre></div>
 </div>
 <p>and <a class="reference external" href="https://github.com/rootpy/rootpy#manual-installation">install</a> it:</p>
-<div class="highlight-python"><pre>~/my_env/bin/python rootpy/setup.py install</pre>
+<div class="highlight-python"><div class="highlight"><pre>~/my_env/bin/python rootpy/setup.py install
+</pre></div>
 </div>
 <p>Note that neither <cite>sudo</cite> nor <cite>&#8211;user</cite> is used, because we are in a virtualenv.</p>
 <p><cite>rootpy</cite> should now be ready to <a class="reference external" href="https://github.com/rootpy/rootpy#documentation">use</a>:</p>
-<div class="highlight-python"><pre>python
-&gt;&gt;&gt; import rootpy</pre>
+<div class="highlight-python"><div class="highlight"><pre>python
+&gt;&gt;&gt; import rootpy
+</pre></div>
 </div>
 </div>
 <div class="section" id="have-questions-or-found-a-bug">
@@ -161,7 +166,7 @@ and use the tag <tt class="docutils literal"><span class="pre">rootpy</span></tt
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

@@ -176,11 +176,9 @@
 <span class="nd">@extra_initialization</span>
 <span class="k">def</span> <span class="nf">initialize</span><span class="p">():</span>
     <span class="k">global</span> <span class="n">DICTS_PATH</span>
-
     <span class="c"># Used insetad of AddDynamicPath for ordering</span>
     <span class="n">path</span> <span class="o">=</span> <span class="s">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">DICTS_PATH</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">gSystem</span><span class="o">.</span><span class="n">GetDynamicPath</span><span class="p">()])</span>
     <span class="n">ROOT</span><span class="o">.</span><span class="n">gSystem</span><span class="o">.</span><span class="n">SetDynamicPath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-
     <span class="n">ROOT</span><span class="o">.</span><span class="n">gSystem</span><span class="o">.</span><span class="n">AddLinkedLibs</span><span class="p">(</span><span class="s">&quot;-Wl,-rpath,{0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DICTS_PATH</span><span class="p">))</span>
 
 
@@ -190,7 +188,6 @@
 <span class="sd">    nesting and namespaces.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parse_result</span><span class="p">):</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">parse_result</span> <span class="o">=</span> <span class="n">parse_result</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">parse_result</span><span class="o">.</span><span class="n">type_prefix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parse_result</span><span class="o">.</span><span class="n">type_name</span><span class="p">)</span>
@@ -199,12 +196,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">suffix</span> <span class="o">=</span> <span class="n">parse_result</span><span class="o">.</span><span class="n">type_suffix</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_result</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
-
         <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -333,13 +328,11 @@
 
 <div class="viewcode-block" id="generate"><a class="viewcode-back" href="../../reference/generated/rootpy.stl.generate.html#rootpy.stl.generate">[docs]</a><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">has_iterators</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">NEW_DICTS</span>
-
     <span class="c"># FIXME: _rootpy_dictionary_already_exists returns false positives</span>
     <span class="c"># if a third-party module provides &quot;incomplete&quot; dictionaries.</span>
     <span class="c">#if compiled._rootpy_dictionary_already_exists(declaration):</span>
     <span class="c">#    log.debug(&quot;generate({0}) =&gt; already available&quot;.format(declaration))</span>
     <span class="c">#    return</span>
-
     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;requesting dictionary for {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">declaration</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">headers</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
@@ -381,7 +374,6 @@
         <span class="k">return</span>
 
     <span class="k">with</span> <span class="n">lock</span><span class="p">(</span><span class="n">pjoin</span><span class="p">(</span><span class="n">DICTS_PATH</span><span class="p">,</span> <span class="s">&quot;lock&quot;</span><span class="p">),</span> <span class="n">poll_interval</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
-
         <span class="c"># This dict was not previously generated so we must create it now</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;generating dictionary for {0} ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">declaration</span><span class="p">))</span>
         <span class="n">includes</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
@@ -416,14 +408,13 @@
 <span class="sd">    Behaves like ROOT&#39;s Template class, except it will build dictionaries on</span>
 <span class="sd">    demand.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Instantiate the template represented by ``self`` with the template</span>
-<span class="sd">        arguments specified by ``args``.</span>
+<span class="sd">        arguments specified by ``params``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">make_string</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">)</span>
-
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;headers&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">make_string</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">)</span>
         <span class="n">typ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__name__</span>
         <span class="k">if</span> <span class="n">params</span><span class="p">:</span>
             <span class="n">typ</span> <span class="o">=</span> <span class="s">&#39;{0}&lt;{1}&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
@@ -438,7 +429,7 @@
         <span class="k">return</span> <span class="n">cls</span>
 
 
-<span class="kn">from</span> <span class="nn">rootpy.extern.module_facade</span> <span class="kn">import</span> <span class="n">Facade</span>
+<span class="kn">from</span> <span class="nn">.utils.module_facade</span> <span class="kn">import</span> <span class="n">Facade</span>
 
 
 <span class="nd">@Facade</span><span class="p">(</span><span class="n">__name__</span><span class="p">,</span> <span class="n">expose_internal</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -491,7 +482,7 @@
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

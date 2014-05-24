@@ -65,9 +65,7 @@
 <p>This example demonstrates how to convert a Tree into a NumPy ndarray or
 recarray.</p>
 <p><strong>Python source code:</strong> <a class="reference download internal" href="../../_downloads/tree_to_array.py"><tt class="xref download docutils literal"><span class="pre">tree_to_array.py</span></tt></a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">rootpy</span>
-<span class="n">rootpy</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">basic_config_colorized</span><span class="p">()</span>
-<span class="kn">from</span> <span class="nn">rootpy.tree</span> <span class="kn">import</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">TreeModel</span><span class="p">,</span> <span class="n">FloatCol</span><span class="p">,</span> <span class="n">IntCol</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">rootpy.tree</span> <span class="kn">import</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">TreeModel</span><span class="p">,</span> <span class="n">FloatCol</span><span class="p">,</span> <span class="n">IntCol</span>
 <span class="kn">from</span> <span class="nn">rootpy.io</span> <span class="kn">import</span> <span class="n">root_open</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">gauss</span>
 
@@ -77,7 +75,6 @@ recarray.</p>
 
 <span class="c"># define the model</span>
 <span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">TreeModel</span><span class="p">):</span>
-
     <span class="n">x</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
     <span class="n">z</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
@@ -164,7 +161,7 @@ recarray.</p>
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

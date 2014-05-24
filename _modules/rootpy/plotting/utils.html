@@ -63,16 +63,117 @@
 
 <span class="kn">import</span> <span class="nn">ROOT</span>
 
-<span class="kn">from</span> <span class="nn">.hist</span> <span class="kn">import</span> <span class="n">_Hist</span><span class="p">,</span> <span class="n">HistStack</span>
+<span class="kn">from</span> <span class="nn">.canvas</span> <span class="kn">import</span> <span class="n">_PadBase</span>
+<span class="kn">from</span> <span class="nn">.hist</span> <span class="kn">import</span> <span class="n">_Hist</span><span class="p">,</span> <span class="n">Hist</span><span class="p">,</span> <span class="n">HistStack</span>
 <span class="kn">from</span> <span class="nn">.graph</span> <span class="kn">import</span> <span class="n">_Graph1DBase</span><span class="p">,</span> <span class="n">Graph</span>
+<span class="kn">from</span> <span class="nn">..context</span> <span class="kn">import</span> <span class="n">preserve_current_canvas</span><span class="p">,</span> <span class="n">do_nothing</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;draw&#39;</span><span class="p">,</span>
     <span class="s">&#39;get_limits&#39;</span><span class="p">,</span>
     <span class="s">&#39;get_band&#39;</span><span class="p">,</span>
-    <span class="s">&#39;all_primitives&#39;</span><span class="p">,</span>
     <span class="s">&#39;canvases_with&#39;</span><span class="p">,</span>
+    <span class="s">&#39;find_all_primitives&#39;</span><span class="p">,</span>
+    <span class="s">&#39;tick_length_pixels&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 
+
+<div class="viewcode-block" id="draw"><a class="viewcode-back" href="../../../reference/generated/rootpy.plotting.utils.draw.html#rootpy.plotting.utils.draw">[docs]</a><span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="n">plottables</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">same</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+         <span class="n">xaxis</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">yaxis</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+         <span class="n">xtitle</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ytitle</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+         <span class="n">xlimits</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ylimits</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+         <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw a list of histograms, stacks, and/or graphs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    plottables : Hist, Graph, HistStack, or list of such objects</span>
+<span class="sd">        List of objects to draw.</span>
+
+<span class="sd">    pad : Pad or Canvas, optional (default=None)</span>
+<span class="sd">        The pad to draw onto. If None then use the current global pad.</span>
+
+<span class="sd">    same : bool, optional (default=False)</span>
+<span class="sd">        If True then use &#39;SAME&#39; draw option for all objects instead of</span>
+<span class="sd">        all but the first. Use this option if you are drawing onto a pad</span>
+<span class="sd">        that already holds drawn objects.</span>
+
+<span class="sd">    xaxis : TAxis, optional (default=None)</span>
+<span class="sd">        Use this x-axis or use the x-axis of the first plottable if None.</span>
+
+<span class="sd">    yaxis : TAxis, optional (default=None)</span>
+<span class="sd">        Use this y-axis or use the y-axis of the first plottable if None.</span>
+
+<span class="sd">    xtitle : str, optional (default=None)</span>
+<span class="sd">        Set the x-axis title.</span>
+
+<span class="sd">    ytitle : str, optional (default=None)</span>
+<span class="sd">        Set the y-axis title.</span>
+
+<span class="sd">    xlimits : tuple, optional (default=None)</span>
+<span class="sd">        Set the x-axis limits with a 2-tuple of (min, max)</span>
+
+<span class="sd">    ylimits : tuple, optional (default=None)</span>
+<span class="sd">        Set the y-axis limits with a 2-tuple of (min, max)</span>
+
+<span class="sd">    kwargs : dict</span>
+<span class="sd">        All extra arguments are passed to get_limits when determining the axis</span>
+<span class="sd">        limits.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (xaxis, yaxis), (xmin, xmax, ymin, ymax) : tuple</span>
+<span class="sd">        The axes and axes bounds.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    get_limits</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">preserve_current_canvas</span> <span class="k">if</span> <span class="n">pad</span> <span class="k">else</span> <span class="n">do_nothing</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plottables</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="n">plottables</span> <span class="o">=</span> <span class="p">[</span><span class="n">plottables</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">plottables</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;plottables is empty&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">context</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">pad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">pad</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+        <span class="c"># get the axes limits</span>
+        <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">get_limits</span><span class="p">(</span><span class="n">plottables</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xlimits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">xlimits</span>
+        <span class="k">if</span> <span class="n">ylimits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ylimits</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">same</span><span class="p">:</span>
+            <span class="c"># draw and get the axes with a temporary histogram</span>
+            <span class="n">hist</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">hist</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="s">&#39;AXIS&#39;</span><span class="p">)</span>
+            <span class="c"># ignore axes from user if any</span>
+            <span class="n">xaxis</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">xaxis</span>
+            <span class="n">yaxis</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">yaxis</span>
+        <span class="c"># draw the plottables</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plottables</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">THStack</span><span class="p">):</span>
+                <span class="c"># use SetMin/Max for y-axis</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">SetMinimum</span><span class="p">(</span><span class="n">ymin</span><span class="p">)</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">SetMaximum</span><span class="p">(</span><span class="n">ymax</span><span class="p">)</span>
+                <span class="c"># ROOT: please fix this...</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="s">&#39;SAME&#39;</span><span class="p">)</span>
+        <span class="c"># set the axes limits and titles</span>
+        <span class="k">if</span> <span class="n">xaxis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">xaxis</span><span class="o">.</span><span class="n">SetLimits</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
+            <span class="n">xaxis</span><span class="o">.</span><span class="n">SetRangeUser</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">xtitle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">xaxis</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="n">xtitle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">yaxis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">yaxis</span><span class="o">.</span><span class="n">SetLimits</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+            <span class="n">yaxis</span><span class="o">.</span><span class="n">SetRangeUser</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ytitle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">yaxis</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="n">ytitle</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">xaxis</span><span class="p">,</span> <span class="n">yaxis</span><span class="p">),</span> <span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+
+</div>
 <span class="n">multiadd</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">map</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">add</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 <span class="n">multisub</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">map</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">sub</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
@@ -107,11 +208,11 @@
             <span class="n">x2</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">x2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s">&quot;range is ambiguous when x1 == x2 == 0 and snap=True&quot;</span><span class="p">)</span>
+            <span class="c"># garbage in garbage out</span>
+            <span class="k">return</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span>
     <span class="k">elif</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">x2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s">&quot;range is ambiguous when x1 == x2 and snap=False&quot;</span><span class="p">)</span>
+        <span class="c"># garbage in garbage out</span>
+        <span class="k">return</span> <span class="n">x1</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mf">1.</span>
     <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span>
     <span class="k">elif</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -331,9 +432,21 @@
     <span class="k">return</span> <span class="n">band</span>
 
 </div>
-<div class="viewcode-block" id="all_primitives"><a class="viewcode-back" href="../../../reference/generated/rootpy.plotting.utils.all_primitives.html#rootpy.plotting.utils.all_primitives">[docs]</a><span class="k">def</span> <span class="nf">all_primitives</span><span class="p">(</span><span class="n">pad</span><span class="p">):</span>
+<div class="viewcode-block" id="canvases_with"><a class="viewcode-back" href="../../../reference/generated/rootpy.plotting.utils.canvases_with.html#rootpy.plotting.utils.canvases_with">[docs]</a><span class="k">def</span> <span class="nf">canvases_with</span><span class="p">(</span><span class="n">drawable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Recursively find all primities on a canvas, even those hiding behind a</span>
+<span class="sd">    Return a list of all canvases where `drawable` has been painted.</span>
+
+<span class="sd">    Note: This function is inefficient because it inspects all objects on all</span>
+<span class="sd">          canvases, recursively. Avoid calling it if you have a large number of</span>
+<span class="sd">          canvases and primitives.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">gROOT</span><span class="o">.</span><span class="n">GetListOfCanvases</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">drawable</span> <span class="ow">in</span> <span class="n">find_all_primitives</span><span class="p">(</span><span class="n">c</span><span class="p">)]</span>
+
+</div>
+<div class="viewcode-block" id="find_all_primitives"><a class="viewcode-back" href="../../../reference/generated/rootpy.plotting.utils.find_all_primitives.html#rootpy.plotting.utils.find_all_primitives">[docs]</a><span class="k">def</span> <span class="nf">find_all_primitives</span><span class="p">(</span><span class="n">pad</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recursively find all primities on a pad, even those hiding behind a</span>
 <span class="sd">    GetListOfFunctions() of a primitive</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -346,20 +459,18 @@
             <span class="k">if</span> <span class="n">p</span><span class="p">:</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">primitive</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TPad</span><span class="p">):</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">all_primitives</span><span class="p">(</span><span class="n">primitive</span><span class="p">))</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">find_all_primitives</span><span class="p">(</span><span class="n">primitive</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">result</span>
 
 </div>
-<div class="viewcode-block" id="canvases_with"><a class="viewcode-back" href="../../../reference/generated/rootpy.plotting.utils.canvases_with.html#rootpy.plotting.utils.canvases_with">[docs]</a><span class="k">def</span> <span class="nf">canvases_with</span><span class="p">(</span><span class="n">drawable</span><span class="p">):</span>
+<div class="viewcode-block" id="tick_length_pixels"><a class="viewcode-back" href="../../../reference/generated/rootpy.plotting.utils.tick_length_pixels.html#rootpy.plotting.utils.tick_length_pixels">[docs]</a><span class="k">def</span> <span class="nf">tick_length_pixels</span><span class="p">(</span><span class="n">pad</span><span class="p">,</span> <span class="n">xaxis</span><span class="p">,</span> <span class="n">yaxis</span><span class="p">,</span> <span class="n">xlength</span><span class="p">,</span> <span class="n">ylength</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return a list of all canvases where `drawable` has been painted.</span>
-
-<span class="sd">    Note: This function is inefficient because it inspects all objects on all</span>
-<span class="sd">          canvases, recursively. Avoid calling it if you have a large number of</span>
-<span class="sd">          canvases and primitives.</span>
+<span class="sd">    Set the axes tick lengths in pixels</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">gROOT</span><span class="o">.</span><span class="n">GetListOfCanvases</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">drawable</span> <span class="ow">in</span> <span class="n">all_primitives</span><span class="p">(</span><span class="n">c</span><span class="p">)]</span></div>
+    <span class="k">if</span> <span class="n">ylength</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ylength</span> <span class="o">=</span> <span class="n">xlength</span>
+    <span class="n">xaxis</span><span class="o">.</span><span class="n">SetTickLength</span><span class="p">(</span><span class="n">xlength</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">pad</span><span class="o">.</span><span class="n">height_pixels</span><span class="p">))</span>
+    <span class="n">yaxis</span><span class="o">.</span><span class="n">SetTickLength</span><span class="p">(</span><span class="n">ylength</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">pad</span><span class="o">.</span><span class="n">width_pixels</span><span class="p">))</span></div>
 </pre></div>
 
           </div>
@@ -402,7 +513,7 @@
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

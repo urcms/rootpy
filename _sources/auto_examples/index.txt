@@ -139,6 +139,12 @@ Examples concerning the :mod:`rootpy.plotting` package.
 
 .. toctree::
 
+   plotting/plot_overlay
+
+
+
+.. toctree::
+
    plotting/plot_style
 
 

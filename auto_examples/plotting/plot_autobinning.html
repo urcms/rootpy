@@ -67,34 +67,33 @@ and to automatically choose a binning with various methods.</p>
 <p>The automatic binning requires numpy/scipy</p>
 <img alt="../../_images/root_plot_autobinning_1.png" class="align-center" src="../../_images/root_plot_autobinning_1.png" />
 <p><strong>Script output</strong>:</p>
-<div class="highlight-python"><pre>---------------------------------------------------------
+<div class="highlight-python"><div class="highlight"><pre>---------------------------------------------------------
               method                    bins   time [s]
 ---------------------------------------------------------
 normal_small
-              manual1                     50   0.01
+              manual1                     50   0.02
               sturges                      9   0.00
               sturges-doane               21   0.00
-              scott                       12   0.00
+              scott                        9   0.00
               sqrt                        15   0.00
-              doane                       10   0.23
-              freedman-diaconis           15   0.00
-              risk                        14   0.01
+              doane                       10   0.12
+              freedman-diaconis           10   0.00
+              risk                        15   0.01
               knuth                       15   0.01
 normal
-              manual1                     50   0.08
-              sturges                     18   0.08
-              sturges-doane               87   0.08
-              scott                      110   0.08
-              sqrt                       317   0.08
-              doane                       19   0.09
-              freedman-diaconis          142   0.09
-              risk                       303   0.62
-              knuth                      252   0.54</pre>
+              manual1                     50   0.17
+              sturges                     18   0.17
+              sturges-doane               87   0.17
+              scott                      112   0.17
+              sqrt                       317   0.17
+              doane                       18   0.18
+              freedman-diaconis          145   0.18
+              risk                       296   0.75
+              knuth                      252   0.63
+</pre></div>
 </div>
 <p><strong>Python source code:</strong> <a class="reference download internal" href="../../_downloads/plot_autobinning.py"><tt class="xref download docutils literal"><span class="pre">plot_autobinning.py</span></tt></a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">rootpy</span>
-<span class="n">rootpy</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">basic_config_colorized</span><span class="p">()</span>
-<span class="kn">from</span> <span class="nn">rootpy.plotting</span> <span class="kn">import</span> <span class="n">histogram</span><span class="p">,</span> <span class="n">Canvas</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">rootpy.plotting</span> <span class="kn">import</span> <span class="n">histogram</span><span class="p">,</span> <span class="n">Canvas</span>
 <span class="kn">from</span> <span class="nn">rootpy.interactive</span> <span class="kn">import</span> <span class="n">wait</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
@@ -160,7 +159,7 @@ normal
 <span class="n">wait</span><span class="p">()</span>
 </pre></div>
 </div>
-<p><strong>Total running time of the example:</strong>  2.07 seconds</p>
+<p><strong>Total running time of the example:</strong>  2.84 seconds</p>
 </div>
 
 
@@ -220,7 +219,7 @@ normal
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

@@ -17,7 +17,8 @@ This example demonstrates how to set the plotting style.
 
 **Script output**::
 
-  Invalid style: `-b`. Using the `ATLAS` style.
+  specify style parameters with --name=value
+  Invalid style: `html`. Using the `ATLAS` style.
 
 
 
@@ -26,5 +27,5 @@ This example demonstrates how to set the plotting style.
 .. literalinclude:: plot_style.py
     :lines: 10-
 
-**Total running time of the example:**  0.10 seconds
+**Total running time of the example:**  0.11 seconds
     

@@ -120,11 +120,11 @@ them where they are needed (think of web services, for example).</p>
 <span class="go">----&gt; 1 f = ROOT.TFile(&quot;test.root&quot;)</span>
 
 <span class="go">.../rootpy/logger/roothandler.py in python_logging_error_handler(level, abort, location, msg)</span>
-<span class="go">     50                         # We can&#39;t raise an exception from here because ctypes/PyROOT swallows it.</span>
-<span class="go">     51                         # Hence the need for dark magic, we re-raise it within a trace.</span>
+<span class="go">      50                         # We can&#39;t raise an exception from here because ctypes/PyROOT swallows it.</span>
+<span class="go">      51                         # Hence the need for dark magic, we re-raise it within a trace.</span>
 <span class="go">---&gt; 52                         raise ROOTError(level, location, msg)</span>
-<span class="go">     53                 except RuntimeError:</span>
-<span class="go">     54                         _, exc, traceback = sys.exc_info()</span>
+<span class="go">      53                 except RuntimeError:</span>
+<span class="go">      54                         _, exc, traceback = sys.exc_info()</span>
 
 <span class="go">ROOTError: level=3000, loc=&#39;TFile::TFile&#39;, msg=&#39;file test.root does not exist&#39;</span>
 </pre></div>
@@ -171,22 +171,22 @@ from, you can decrease the abort level to the minimum:</p>
 <p><a class="reference internal" href="../reference/logger.html#module-rootpy.logger" title="rootpy.logger"><tt class="xref py py-mod docutils literal"><span class="pre">rootpy.logger</span></tt></a> adds a check to ensure that a handler is configured
 against the <tt class="docutils literal"><span class="pre">rootpy</span></tt> logging namespace and, if not, installs a default one.</p>
 <p>There is some syntactic sugar to obtain loggers in a given namespace:</p>
-<div class="highlight-python"><div class="highlight"><pre>     <span class="kn">import</span> <span class="nn">rootpy</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">rootpy</span>
 
-     <span class="c"># logger in the rootpy logging namespace</span>
+<span class="c"># logger in the rootpy logging namespace</span>
 <span class="c"># (whose parent is python&#39;s `logging.root`)</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">rootpy</span><span class="o">.</span><span class="n">log</span>
 
-     <span class="n">log</span><span class="p">[</span><span class="s">&quot;child&quot;</span><span class="p">]</span> <span class="c"># logger in the rootpy.child namespace</span>
-     <span class="n">log</span><span class="p">[</span><span class="s">&quot;/ROOT&quot;</span><span class="p">]</span> <span class="c"># ROOT</span>
-     <span class="n">log</span><span class="p">[</span><span class="s">&quot;/ROOT.TFile&quot;</span><span class="p">]</span> <span class="c"># ROOT.TFile</span>
+<span class="n">log</span><span class="p">[</span><span class="s">&quot;child&quot;</span><span class="p">]</span> <span class="c"># logger in the rootpy.child namespace</span>
+<span class="n">log</span><span class="p">[</span><span class="s">&quot;/ROOT&quot;</span><span class="p">]</span> <span class="c"># ROOT</span>
+<span class="n">log</span><span class="p">[</span><span class="s">&quot;/ROOT.TFile&quot;</span><span class="p">]</span> <span class="c"># ROOT.TFile</span>
 </pre></div>
 </div>
 <p><a class="reference internal" href="../reference/logger.html#module-rootpy.logger" title="rootpy.logger"><tt class="xref py py-mod docutils literal"><span class="pre">rootpy.logger</span></tt></a> can also help you identify <em>where</em> messages are coming
-from, using <tt class="xref py py-meth docutils literal"><span class="pre">rootpy.logger.extended_logger.ExtendedLogger.showstack()</span></tt>.</p>
+from, using <tt class="xref py py-meth docutils literal"><span class="pre">rootpy.logger.extended_logger.ExtendedLogger.show_stack()</span></tt>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">log</span><span class="p">[</span><span class="s">&quot;/&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">)</span>
 <span class="c"># Show stack traces for</span>
-<span class="n">log</span><span class="p">[</span><span class="s">&quot;/ROOT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">showstack</span><span class="p">()</span>
+<span class="n">log</span><span class="p">[</span><span class="s">&quot;/ROOT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">show_stack</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -258,7 +258,7 @@ from, using <tt class="xref py py-meth docutils literal"><span class="pre">rootp
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

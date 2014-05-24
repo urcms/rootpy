@@ -65,28 +65,29 @@
 <p>This example demonstrates how to create and work with ROOT histogram in rootpy.</p>
 <img alt="../../_images/root_plot_hist_1.png" class="align-center" src="../../_images/root_plot_hist_1.png" />
 <p><strong>Script output</strong>:</p>
-<div class="highlight-python"><pre>f0f18d7b695b436c90ae9a8d1bc26fa5
+<div class="highlight-python"><div class="highlight"><pre>6cd57882d0414e56b7a6e2793562b5a8
 my hist
 Some Data
-1.0</pre>
+1.0
+</pre></div>
 </div>
 <p><strong>Python source code:</strong> <a class="reference download internal" href="../../_downloads/plot_hist.py"><tt class="xref download docutils literal"><span class="pre">plot_hist.py</span></tt></a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">rootpy</span>
-<span class="n">rootpy</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">basic_config_colorized</span><span class="p">()</span>
-<span class="kn">from</span> <span class="nn">rootpy.plotting</span> <span class="kn">import</span> <span class="n">Hist</span><span class="p">,</span> <span class="n">Hist2D</span><span class="p">,</span> <span class="n">Hist3D</span><span class="p">,</span> <span class="n">HistStack</span><span class="p">,</span> <span class="n">Legend</span><span class="p">,</span> <span class="n">Canvas</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">rootpy.plotting</span> <span class="kn">import</span> <span class="n">Hist</span><span class="p">,</span> <span class="n">Hist2D</span><span class="p">,</span> <span class="n">Hist3D</span><span class="p">,</span> <span class="n">HistStack</span><span class="p">,</span> <span class="n">Legend</span><span class="p">,</span> <span class="n">Canvas</span>
 <span class="kn">from</span> <span class="nn">rootpy.interactive</span> <span class="kn">import</span> <span class="n">wait</span>
 <span class="kn">import</span> <span class="nn">random</span>
 
 <span class="c"># create a simple 1D histogram with 10 constant-width bins between 0 and 1</span>
 <span class="n">h_simple</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">h_simple</span><span class="o">.</span><span class="n">name</span>
+
 <span class="c"># If the name is not specified, a UUID is used so that ROOT never complains</span>
 <span class="c"># about two histograms having the same name.</span>
 <span class="c"># Alternatively you can specify the name (and the title or any other style</span>
 <span class="c"># attributes) in the constructor:</span>
 <span class="n">h_simple</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;my hist&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&#39;Some Data&#39;</span><span class="p">,</span>
-        <span class="n">drawstyle</span><span class="o">=</span><span class="s">&#39;hist&#39;</span><span class="p">,</span>
-        <span class="n">fillstyle</span><span class="o">=</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+                <span class="n">drawstyle</span><span class="o">=</span><span class="s">&#39;hist&#39;</span><span class="p">,</span>
+                <span class="n">legendstyle</span><span class="o">=</span><span class="s">&#39;F&#39;</span><span class="p">,</span>
+                <span class="n">fillstyle</span><span class="o">=</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
 
 <span class="c"># fill the histogram</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
@@ -111,11 +112,13 @@ Some Data
 <span class="n">canvas</span><span class="o">.</span><span class="n">SetTopMargin</span><span class="p">(</span><span class="mf">0.10</span><span class="p">)</span>
 <span class="n">canvas</span><span class="o">.</span><span class="n">SetRightMargin</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
 <span class="n">h_simple</span><span class="o">.</span><span class="n">Draw</span><span class="p">()</span>
-<span class="n">legend</span> <span class="o">=</span> <span class="n">Legend</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">legend</span><span class="o">.</span><span class="n">AddEntry</span><span class="p">(</span><span class="n">h_simple</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;F&#39;</span><span class="p">)</span>
+
+<span class="c"># create the legend</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">Legend</span><span class="p">([</span><span class="n">h_simple</span><span class="p">],</span> <span class="n">pad</span><span class="o">=</span><span class="n">canvas</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="s">&#39;Header&#39;</span><span class="p">,</span>
+                <span class="n">leftmargin</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                <span class="n">rightmargin</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">legend</span><span class="o">.</span><span class="n">Draw</span><span class="p">()</span>
-<span class="n">canvas</span><span class="o">.</span><span class="n">Modified</span><span class="p">()</span>
-<span class="n">canvas</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
 
 <span class="c"># 2D and 3D histograms are handled in the same way</span>
 <span class="c"># the constructor arguments are repetitions of #bins, left bound, right bound.</span>
@@ -196,7 +199,7 @@ Some Data
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

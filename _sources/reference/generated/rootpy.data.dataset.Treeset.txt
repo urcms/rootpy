@@ -1,8 +1,0 @@
-rootpy.data.dataset.Treeset
-===========================
-
-.. currentmodule:: rootpy.data.dataset
-
-.. autoclass:: Treeset
-   :no-undoc-members:
-   :inherited-members:

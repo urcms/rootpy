@@ -327,6 +327,12 @@ from the returned histogram.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rootpy.plotting.Hist2D.integral">
+<tt class="descname">integral</tt><big>(</big><em>xbin1=None</em>, <em>xbin2=None</em>, <em>ybin1=None</em>, <em>ybin2=None</em>, <em>width=False</em>, <em>error=False</em>, <em>overflow=False</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist2D.integral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the integral and error over a range of bins</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="rootpy.plotting.Hist2D.lowerbound">
 <tt class="descname">lowerbound</tt><big>(</big><em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist2D.lowerbound" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the lower bound of the binning along an axis</p>
@@ -527,6 +533,13 @@ treated as equal.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rootpy.plotting.Hist2D.uniform_binned">
+<tt class="descname">uniform_binned</tt><big>(</big><em>name=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist2D.uniform_binned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new histogram with constant width bins along all axes by
+using the bin indices as the bin edges of the new histogram.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="rootpy.plotting.Hist2D.upperbound">
 <tt class="descname">upperbound</tt><big>(</big><em>axis=0</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Hist2D.upperbound" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the upper bound of the binning along an axis</p>
@@ -593,7 +606,7 @@ treated as equal.</p>
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

@@ -30,7 +30,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/searchtools.js"></script>
     <link rel="top" title="rootpy dev documentation" href="../index.html" />
-    <link rel="next" title="rootpy.plotting.utils.get_limits" href="generated/rootpy.plotting.utils.get_limits.html" />
+    <link rel="next" title="rootpy.plotting.utils.draw" href="generated/rootpy.plotting.utils.draw.html" />
     <link rel="prev" title="rootpy.plotting.root2matplotlib.contour" href="generated/rootpy.plotting.root2matplotlib.contour.html" /> 
   </head>
   <body>
@@ -44,7 +44,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="generated/rootpy.plotting.utils.get_limits.html" title="rootpy.plotting.utils.get_limits"
+          <a href="generated/rootpy.plotting.utils.draw.html" title="rootpy.plotting.utils.draw"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="generated/rootpy.plotting.root2matplotlib.contour.html" title="rootpy.plotting.root2matplotlib.contour"
@@ -68,17 +68,23 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/rootpy.plotting.utils.get_limits.html#rootpy.plotting.utils.get_limits" title="rootpy.plotting.utils.get_limits"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.utils.get_limits</span></tt></a>(plottables[,&nbsp;...])</td>
-<td>Get the axes limits that should be used for a 1D histogram, graph, or stack</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/rootpy.plotting.utils.draw.html#rootpy.plotting.utils.draw" title="rootpy.plotting.utils.draw"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.utils.draw</span></tt></a>(plottables[,&nbsp;pad,&nbsp;same,&nbsp;...])</td>
+<td>Draw a list of histograms, stacks, and/or graphs.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/rootpy.plotting.utils.get_band.html#rootpy.plotting.utils.get_band" title="rootpy.plotting.utils.get_band"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.utils.get_band</span></tt></a>(low_hist,&nbsp;high_hist)</td>
-<td>Convert the low and high histograms into a TGraphAsymmErrors centered at</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/rootpy.plotting.utils.get_limits.html#rootpy.plotting.utils.get_limits" title="rootpy.plotting.utils.get_limits"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.utils.get_limits</span></tt></a>(plottables[,&nbsp;...])</td>
+<td>Get the axes limits that should be used for a 1D histogram, graph, or stack of histograms.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/rootpy.plotting.utils.all_primitives.html#rootpy.plotting.utils.all_primitives" title="rootpy.plotting.utils.all_primitives"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.utils.all_primitives</span></tt></a>(pad)</td>
-<td>Recursively find all primities on a canvas, even those hiding behind a</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/rootpy.plotting.utils.get_band.html#rootpy.plotting.utils.get_band" title="rootpy.plotting.utils.get_band"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.utils.get_band</span></tt></a>(low_hist,&nbsp;high_hist)</td>
+<td>Convert the low and high histograms into a TGraphAsymmErrors centered at the middle histogram if not None otherwise the middle between the low and high points, to be used to draw a (possibly asymmetric) error band.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/rootpy.plotting.utils.canvases_with.html#rootpy.plotting.utils.canvases_with" title="rootpy.plotting.utils.canvases_with"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.utils.canvases_with</span></tt></a>(drawable)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/rootpy.plotting.utils.find_all_primitives.html#rootpy.plotting.utils.find_all_primitives" title="rootpy.plotting.utils.find_all_primitives"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.utils.find_all_primitives</span></tt></a>(pad)</td>
+<td>Recursively find all primities on a pad, even those hiding behind a</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/rootpy.plotting.utils.canvases_with.html#rootpy.plotting.utils.canvases_with" title="rootpy.plotting.utils.canvases_with"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.utils.canvases_with</span></tt></a>(drawable)</td>
 <td>Return a list of all canvases where <cite>drawable</cite> has been painted.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/rootpy.plotting.utils.tick_length_pixels.html#rootpy.plotting.utils.tick_length_pixels" title="rootpy.plotting.utils.tick_length_pixels"><tt class="xref py py-obj docutils literal"><span class="pre">plotting.utils.tick_length_pixels</span></tt></a>(pad,&nbsp;...)</td>
+<td>Set the axes tick lengths in pixels</td>
 </tr>
 </tbody>
 </table>
@@ -97,9 +103,7 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">rootpy.plotting.utils</span></tt>: Plotting Utilities</a><ul>
-<li><a class="reference internal" href="#functions">Functions</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
 </li>
 </ul>
@@ -108,8 +112,8 @@
   <p class="topless"><a href="generated/rootpy.plotting.root2matplotlib.contour.html"
                         title="previous chapter">rootpy.plotting.root2matplotlib.contour</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="generated/rootpy.plotting.utils.get_limits.html"
-                        title="next chapter">rootpy.plotting.utils.get_limits</a></p>
+  <p class="topless"><a href="generated/rootpy.plotting.utils.draw.html"
+                        title="next chapter">rootpy.plotting.utils.draw</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/reference/plotting.utils.txt"
@@ -142,7 +146,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="generated/rootpy.plotting.utils.get_limits.html" title="rootpy.plotting.utils.get_limits"
+          <a href="generated/rootpy.plotting.utils.draw.html" title="rootpy.plotting.utils.draw"
              >next</a> |</li>
         <li class="right" >
           <a href="generated/rootpy.plotting.root2matplotlib.contour.html" title="rootpy.plotting.root2matplotlib.contour"
@@ -151,7 +155,7 @@
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

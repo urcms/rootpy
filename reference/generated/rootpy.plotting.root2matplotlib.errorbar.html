@@ -75,7 +75,7 @@ or list of histograms and graphs.</p>
 <blockquote>
 <div><p>The histogram(s) and/or Graph(s) to be plotted</p>
 </div></blockquote>
-<p><strong>xerr</strong> : bool, optional (default=False)</p>
+<p><strong>xerr</strong> : bool, optional (default=True)</p>
 <blockquote>
 <div><p>If True, x error bars will be displayed.</p>
 </div></blockquote>
@@ -108,7 +108,7 @@ only pad around the x values.</p>
 <div><p>If True then make the padding inclusive of the y errors otherwise
 only pad around the y values.</p>
 </div></blockquote>
-<p><strong>empty_bins</strong> : bool, optional (default=True)</p>
+<p><strong>emptybins</strong> : bool, optional (default=True)</p>
 <blockquote>
 <div><p>If True (the default) then plot bins with zero content otherwise only
 show bins with nonzero content.</p>
@@ -124,7 +124,7 @@ histogram unless the histogram has both positive and negative bins.</p>
 </div></blockquote>
 <p><strong>kwargs</strong> : additional keyword arguments, optional</p>
 <blockquote>
-<div><p>All additional keyword arguments are passed to matplotlib&#8217;s bar
+<div><p>All additional keyword arguments are passed to matplotlib&#8217;s errorbar
 function.</p>
 </div></blockquote>
 </td>
@@ -196,7 +196,7 @@ function.</p>
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

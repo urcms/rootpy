@@ -65,7 +65,20 @@
 <dl class="class">
 <dt id="rootpy.plotting.Pad">
 <em class="property">class </em><tt class="descclassname">rootpy.plotting.</tt><tt class="descname">Pad</tt><big>(</big><em>xlow</em>, <em>ylow</em>, <em>xup</em>, <em>yup</em>, <em>color=-1</em>, <em>bordersize=-1</em>, <em>bordermode=-2</em>, <em>name=None</em>, <em>title=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Pad" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="method">
+<dt id="rootpy.plotting.Pad.axes">
+<tt class="descname">axes</tt><big>(</big><em>ndim=1</em>, <em>xlimits=None</em>, <em>ylimits=None</em>, <em>zlimits=None</em>, <em>xbins=1</em>, <em>ybins=1</em>, <em>zbins=1</em><big>)</big><a class="headerlink" href="#rootpy.plotting.Pad.axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return axes on this pad</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.Pad.find_all_primitives">
+<tt class="descname">find_all_primitives</tt><big>(</big><big>)</big><a class="headerlink" href="#rootpy.plotting.Pad.find_all_primitives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively find all primities on a pad, even those hiding behind a
+GetListOfFunctions() of a primitive</p>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 
@@ -126,7 +139,7 @@
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

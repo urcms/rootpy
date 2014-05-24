@@ -61,13 +61,12 @@
 <span class="sd">graphs with `matplotlib &lt;http://matplotlib.org/&gt;`_.</span>
 
 <span class="sd">If you just want to save image files and don&#39;t want matplotlib to attempt to</span>
-<span class="sd">create a graphical window you can do this while importing matplotlib for the</span>
-<span class="sd">first time (i.e. before importing rootpy.plotting.root2matplotlib)::</span>
+<span class="sd">create a graphical window, tell matplotlib to use a non-interactive backend</span>
+<span class="sd">such as ``Agg`` when importing it for the first time (i.e. before importing</span>
+<span class="sd">rootpy.plotting.root2matplotlib)::</span>
 
 <span class="sd">   import matplotlib</span>
-<span class="sd">   matplotlib.use(&#39;Agg&#39;) # do this before importing pyplot</span>
-<span class="sd">   from matplotlib import pyplot</span>
-<span class="sd">   pyplot.ioff()</span>
+<span class="sd">   matplotlib.use(&#39;Agg&#39;) # do this before importing pyplot or root2matplotlib</span>
 
 <span class="sd">This puts matplotlib in a batch state similar to ``ROOT.gROOT.SetBatch(True)``.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -78,6 +77,7 @@
 <span class="n">ROOT</span><span class="o">.</span><span class="n">kTRUE</span>
 
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">izip</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
@@ -98,37 +98,37 @@
 <span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">_set_defaults</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;common&#39;</span><span class="p">]):</span>
-
+<span class="k">def</span> <span class="nf">_set_defaults</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;common&#39;</span><span class="p">]):</span>
     <span class="n">defaults</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;common&#39;</span><span class="p">:</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetTitle</span><span class="p">()</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;visible&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">visible</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetTitle</span><span class="p">()</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;visible&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;visible&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;alpha&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;line&#39;</span><span class="p">:</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;linestyle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetLineStyle</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetLineWidth</span><span class="p">()</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;linestyle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetLineStyle</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetLineWidth</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;fill&#39;</span><span class="p">:</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;edgecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetLineColor</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;facecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetFillColor</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
-            <span class="n">root_fillstyle</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetFillStyle</span><span class="p">(</span><span class="s">&#39;root&#39;</span><span class="p">)</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;edgecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetLineColor</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;facecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetFillColor</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+            <span class="n">root_fillstyle</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetFillStyle</span><span class="p">(</span><span class="s">&#39;root&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">root_fillstyle</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;facecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;none&#39;</span>
                 <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;fill&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
             <span class="k">elif</span> <span class="n">root_fillstyle</span> <span class="o">==</span> <span class="mi">1001</span><span class="p">:</span>
                 <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;fill&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;hatch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetFillStyle</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+                <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;hatch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetFillStyle</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
                 <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;facecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;none&#39;</span>
         <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;marker&#39;</span><span class="p">:</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;marker&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetMarkerStyle</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;markersize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetMarkerSize</span><span class="p">()</span> <span class="o">*</span> <span class="mi">5</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;markeredgecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetMarkerColor</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;markerfacecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetMarkerColor</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;marker&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetMarkerStyle</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;markersize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetMarkerSize</span><span class="p">()</span> <span class="o">*</span> <span class="mi">5</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;markeredgecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetMarkerColor</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;markerfacecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetMarkerColor</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;errors&#39;</span><span class="p">:</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;ecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetLineColor</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;ecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetLineColor</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;errorbar&#39;</span><span class="p">:</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;fmt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">GetMarkerStyle</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;fmt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GetMarkerStyle</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
@@ -146,20 +146,16 @@
                 <span class="n">snap</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">logx</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">logy</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-
     <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
-
     <span class="k">if</span> <span class="n">prev_xlim</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">prev_xlim</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">prev_ylim</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">prev_ylim</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">()</span>
-
     <span class="k">if</span> <span class="n">logx</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">logx</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">get_xscale</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;log&#39;</span>
     <span class="k">if</span> <span class="n">logy</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">logy</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">get_yscale</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;log&#39;</span>
-
     <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">get_limits</span><span class="p">(</span>
         <span class="n">h</span><span class="p">,</span>
         <span class="n">xpadding</span><span class="o">=</span><span class="n">xpadding</span><span class="p">,</span>
@@ -169,7 +165,6 @@
         <span class="n">snap</span><span class="o">=</span><span class="n">snap</span><span class="p">,</span>
         <span class="n">logx</span><span class="o">=</span><span class="n">logx</span><span class="p">,</span>
         <span class="n">logy</span><span class="o">=</span><span class="n">logy</span><span class="p">)</span>
-
     <span class="k">if</span> <span class="n">was_empty</span><span class="p">:</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">])</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">])</span>
@@ -179,7 +174,6 @@
             <span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">xmin</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">prev_xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">prev_xmin</span><span class="p">,</span> <span class="n">xmin</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">prev_xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)])</span>
-
         <span class="n">prev_ymin</span><span class="p">,</span> <span class="n">prev_ymax</span> <span class="o">=</span> <span class="n">prev_ylim</span>
         <span class="k">if</span> <span class="n">logy</span> <span class="ow">and</span> <span class="n">prev_ymin</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">ymin</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">prev_ymax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)])</span>
@@ -188,12 +182,10 @@
 
 
 <span class="k">def</span> <span class="nf">_get_highest_zorder</span><span class="p">(</span><span class="n">axes</span><span class="p">):</span>
-
     <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">get_zorder</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">axes</span><span class="o">.</span><span class="n">get_children</span><span class="p">()])</span>
 
 
 <span class="k">def</span> <span class="nf">_maybe_reversed</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-
     <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span>
@@ -296,6 +288,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">low</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">hists</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:])</span>
             <span class="n">high</span> <span class="o">=</span> <span class="n">h</span> <span class="o">+</span> <span class="n">low</span>
+            <span class="n">high</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="s">&#39;alpha&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
             <span class="n">proxy</span> <span class="o">=</span> <span class="n">_hist</span><span class="p">(</span><span class="n">high</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="n">low</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="n">logy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="n">returns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proxy</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">reverse</span><span class="p">:</span>
@@ -325,12 +318,10 @@
 
 </div>
 <span class="k">def</span> <span class="nf">_hist</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-
     <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">zorder</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">zorder</span> <span class="o">=</span> <span class="n">_get_highest_zorder</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-
     <span class="n">_set_defaults</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;common&#39;</span><span class="p">,</span> <span class="s">&#39;line&#39;</span><span class="p">,</span> <span class="s">&#39;fill&#39;</span><span class="p">])</span>
     <span class="n">kwargs_proxy</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">fill</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;fill&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span> <span class="ow">or</span> <span class="s">&#39;hatch&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span>
@@ -343,17 +334,22 @@
                      <span class="n">facecolor</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;facecolor&#39;</span><span class="p">],</span>
                      <span class="n">edgecolor</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;edgecolor&#39;</span><span class="p">],</span>
                      <span class="n">hatch</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;hatch&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+                     <span class="n">alpha</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;alpha&#39;</span><span class="p">],</span>
                      <span class="n">zorder</span><span class="o">=</span><span class="n">zorder</span><span class="p">)</span>
     <span class="c"># draw the edge</span>
-    <span class="n">step</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="n">logy</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="n">zorder</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">legendstyle</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;F&#39;</span><span class="p">:</span>
+    <span class="n">step</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="n">logy</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+         <span class="n">zorder</span><span class="o">=</span><span class="n">zorder</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;alpha&#39;</span><span class="p">])</span>
+    <span class="c"># draw the legend proxy</span>
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="s">&#39;legendstyle&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;F&#39;</span><span class="p">:</span>
         <span class="n">proxy</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs_proxy</span><span class="p">)</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">proxy</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c"># be sure the linewidth is greater than zero...</span>
         <span class="n">proxy</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Line2D</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
                            <span class="n">linestyle</span><span class="o">=</span><span class="n">kwargs_proxy</span><span class="p">[</span><span class="s">&#39;linestyle&#39;</span><span class="p">],</span>
                            <span class="n">linewidth</span><span class="o">=</span><span class="n">kwargs_proxy</span><span class="p">[</span><span class="s">&#39;linewidth&#39;</span><span class="p">],</span>
                            <span class="n">color</span><span class="o">=</span><span class="n">kwargs_proxy</span><span class="p">[</span><span class="s">&#39;edgecolor&#39;</span><span class="p">],</span>
+                           <span class="n">alpha</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;alpha&#39;</span><span class="p">],</span>
                            <span class="n">label</span><span class="o">=</span><span class="n">kwargs_proxy</span><span class="p">[</span><span class="s">&#39;label&#39;</span><span class="p">])</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">proxy</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">proxy</span>
@@ -517,7 +513,6 @@
 
 </div>
 <span class="k">def</span> <span class="nf">_bar</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">roffset</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">rwidth</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-
     <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">xerr</span><span class="p">:</span>
@@ -551,7 +546,7 @@
 <span class="sd">    hists : Hist, Graph or list of Hist and Graph</span>
 <span class="sd">        The histogram(s) and/or Graph(s) to be plotted</span>
 
-<span class="sd">    xerr : bool, optional (default=False)</span>
+<span class="sd">    xerr : bool, optional (default=True)</span>
 <span class="sd">        If True, x error bars will be displayed.</span>
 
 <span class="sd">    yerr : bool or string, optional (default=True)</span>
@@ -578,7 +573,7 @@
 <span class="sd">        If True then make the padding inclusive of the y errors otherwise</span>
 <span class="sd">        only pad around the y values.</span>
 
-<span class="sd">    empty_bins : bool, optional (default=True)</span>
+<span class="sd">    emptybins : bool, optional (default=True)</span>
 <span class="sd">        If True (the default) then plot bins with zero content otherwise only</span>
 <span class="sd">        show bins with nonzero content.</span>
 
@@ -590,7 +585,7 @@
 <span class="sd">        The axes to plot on. If None then use the global current axes.</span>
 
 <span class="sd">    kwargs : additional keyword arguments, optional</span>
-<span class="sd">        All additional keyword arguments are passed to matplotlib&#39;s bar</span>
+<span class="sd">        All additional keyword arguments are passed to matplotlib&#39;s errorbar</span>
 <span class="sd">        function.</span>
 
 <span class="sd">    Returns</span>
@@ -631,10 +626,11 @@
     <span class="k">return</span> <span class="n">returns</span>
 
 </div>
-<span class="k">def</span> <span class="nf">_errorbar</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">xerr</span><span class="p">,</span> <span class="n">yerr</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">emptybins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-
+<span class="k">def</span> <span class="nf">_errorbar</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">xerr</span><span class="p">,</span> <span class="n">yerr</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">emptybins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">zorder</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">zorder</span> <span class="o">=</span> <span class="n">_get_highest_zorder</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="n">_set_defaults</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;common&#39;</span><span class="p">,</span> <span class="s">&#39;errors&#39;</span><span class="p">,</span> <span class="s">&#39;errorbar&#39;</span><span class="p">,</span> <span class="s">&#39;marker&#39;</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">xerr</span><span class="p">:</span>
         <span class="n">xerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">list</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">xerrl</span><span class="p">()),</span> <span class="nb">list</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">xerrh</span><span class="p">())])</span>
@@ -650,7 +646,7 @@
             <span class="n">xerr</span> <span class="o">=</span> <span class="n">xerr</span><span class="p">[:,</span> <span class="n">nonempty</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">yerr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">False</span><span class="p">:</span>
             <span class="n">yerr</span> <span class="o">=</span> <span class="n">yerr</span><span class="p">[:,</span> <span class="n">nonempty</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">axes</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="n">xerr</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">yerr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">axes</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="n">xerr</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">yerr</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="n">zorder</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="step"><a class="viewcode-back" href="../../../reference/generated/rootpy.plotting.root2matplotlib.step.html#rootpy.plotting.root2matplotlib.step">[docs]</a><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -732,22 +728,16 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">_Hist</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">_Hist</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
             <span class="s">&quot;fill_between only operates on 1D histograms&quot;</span><span class="p">)</span>
-    <span class="n">a_xedges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">xedges</span><span class="p">())</span>
-    <span class="n">b_xedges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">xedges</span><span class="p">())</span>
-    <span class="k">if</span> <span class="n">a_xedges</span> <span class="o">!=</span> <span class="n">b_xedges</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;histogram x edges are incompatible&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">check_compatibility</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">check_edges</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">top</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">bottom</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">ibin</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">nbins</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">up</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="p">(</span><span class="n">ibin</span><span class="p">),</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span><span class="p">(</span><span class="n">ibin</span><span class="p">))</span>
-        <span class="n">dn</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="p">(</span><span class="n">ibin</span><span class="p">),</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span><span class="p">(</span><span class="n">ibin</span><span class="p">))</span>
-        <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_xedges</span><span class="p">[</span><span class="n">ibin</span><span class="p">])</span>
-        <span class="n">top</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">up</span><span class="p">)</span>
-        <span class="n">bottom</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
-        <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_xedges</span><span class="p">[</span><span class="n">ibin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-        <span class="n">top</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">up</span><span class="p">)</span>
-        <span class="n">bottom</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">abin</span><span class="p">,</span> <span class="n">bbin</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bins</span><span class="p">(</span><span class="n">overflow</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="n">b</span><span class="o">.</span><span class="n">bins</span><span class="p">(</span><span class="n">overflow</span><span class="o">=</span><span class="bp">False</span><span class="p">)):</span>
+        <span class="n">up</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">abin</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">bbin</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">dn</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">abin</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">bbin</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">abin</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">abin</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">high</span><span class="p">])</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">up</span><span class="p">,</span> <span class="n">up</span><span class="p">])</span>
+        <span class="n">bottom</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">dn</span><span class="p">,</span> <span class="n">dn</span><span class="p">])</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">top</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
     <span class="n">bottom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bottom</span><span class="p">)</span>
@@ -862,7 +852,6 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">x</span><span class="p">()))</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">y</span><span class="p">()))</span>
     <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">z</span><span class="p">())</span><span class="o">.</span><span class="n">T</span>
-
     <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">zoom</span><span class="p">,</span> <span class="s">&#39;__iter__&#39;</span><span class="p">):</span>
@@ -873,7 +862,6 @@
             <span class="n">x</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">zoom</span><span class="p">)</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">zoom</span><span class="p">)</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">zoom</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">axes</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 
@@ -917,7 +905,7 @@
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

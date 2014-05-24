@@ -1,7 +1,0 @@
-rootpy.plotting.utils.all_primitives
-====================================
-
-.. currentmodule:: rootpy.plotting.utils
-
-.. autofunction:: all_primitives
-

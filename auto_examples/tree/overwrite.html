@@ -75,7 +75,6 @@ its branches with new values.</p>
 
 <span class="c"># define the model</span>
 <span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">TreeModel</span><span class="p">):</span>
-
     <span class="n">x</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
     <span class="n">z</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
@@ -109,16 +108,10 @@ its branches with new values.</p>
 <span class="c"># example of how to deal with this in general:</span>
 <span class="n">tree_copy</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="s">&quot;test_copy&quot;</span><span class="p">)</span>
 
-<span class="c"># If the original tree was not handed to you through rootpy don&#39;t forget to:</span>
-<span class="c"># &gt;&gt;&gt; from rootpy import asrootpy</span>
-<span class="c"># &gt;&gt;&gt; tree = asrootpy(tree)</span>
-
 <span class="c"># Here we specify the buffer for the new tree to use. We use the same buffer as</span>
 <span class="c"># the original tree. This creates all the same branches in the new tree but</span>
 <span class="c"># their addresses point to the same memory used by the original tree.</span>
-<span class="n">tree_copy</span><span class="o">.</span><span class="n">set_buffer</span><span class="p">(</span>
-        <span class="n">tree</span><span class="o">.</span><span class="n">_buffer</span><span class="p">,</span>
-        <span class="n">create_branches</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">tree_copy</span><span class="o">.</span><span class="n">set_buffer</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">_buffer</span><span class="p">,</span> <span class="n">create_branches</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="c"># Now loop over the original tree and fill the new tree</span>
 <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">tree</span><span class="p">:</span>
@@ -128,8 +121,8 @@ its branches with new values.</p>
     <span class="c"># &quot;entry&quot; is actually the buffer, which is shared between both trees.</span>
     <span class="n">tree_copy</span><span class="o">.</span><span class="n">Fill</span><span class="p">()</span>
 
-<span class="c"># tree_copy is now a copy of tree where the &quot;x&quot; branch has been overwritten with</span>
-<span class="c"># new values</span>
+<span class="c"># tree_copy is now a copy of tree where the &quot;x&quot; branch has been overwritten</span>
+<span class="c"># with new values</span>
 <span class="n">tree_copy</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span>
 <span class="n">f_copy</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
 <span class="n">f</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
@@ -194,7 +187,7 @@ its branches with new values.</p>
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

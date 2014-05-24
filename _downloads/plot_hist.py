@@ -7,8 +7,6 @@ Working with ROOT histograms
 This example demonstrates how to create and work with ROOT histogram in rootpy.
 """
 print __doc__
-import rootpy
-rootpy.log.basic_config_colorized()
 from rootpy.plotting import Hist, Hist2D, Hist3D, HistStack, Legend, Canvas
 from rootpy.interactive import wait
 import random
@@ -16,13 +14,15 @@ import random
 # create a simple 1D histogram with 10 constant-width bins between 0 and 1
 h_simple = Hist(10, 0, 1)
 print h_simple.name
+
 # If the name is not specified, a UUID is used so that ROOT never complains
 # about two histograms having the same name.
 # Alternatively you can specify the name (and the title or any other style
 # attributes) in the constructor:
 h_simple = Hist(10, -4, 12, name='my hist', title='Some Data',
-        drawstyle='hist',
-        fillstyle='/')
+                drawstyle='hist',
+                legendstyle='F',
+                fillstyle='/')
 
 # fill the histogram
 for i in xrange(1000):
@@ -47,11 +47,13 @@ canvas.SetBottomMargin(0.15)
 canvas.SetTopMargin(0.10)
 canvas.SetRightMargin(0.05)
 h_simple.Draw()
-legend = Legend(1)
-legend.AddEntry(h_simple, style='F')
+
+# create the legend
+legend = Legend([h_simple], pad=canvas,
+                header='Header',
+                leftmargin=0.05,
+                rightmargin=0.5)
 legend.Draw()
-canvas.Modified()
-canvas.Update()
 
 # 2D and 3D histograms are handled in the same way
 # the constructor arguments are repetitions of #bins, left bound, right bound.

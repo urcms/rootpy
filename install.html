@@ -65,6 +65,7 @@
 <ul class="simple">
 <li>Python 2.6 or 2.7 (Python 3 is currently not supported, but see
 <a class="reference external" href="https://github.com/rootpy/rootpy/issues/35">this issue</a> for progress)</li>
+<li><a class="reference external" href="https://pypi.python.org/pypi/setuptools">setuptools</a> 0.7 or newer</li>
 <li><a class="reference external" href="http://root.cern.ch/">ROOT</a> 5.28+ with <a class="reference external" href="http://root.cern.ch/drupal/content/pyroot">PyROOT</a> enabled</li>
 </ul>
 <p>The following dependencies are optional:</p>
@@ -80,10 +81,12 @@
 <div class="section" id="getting-the-latest-source">
 <h2>1.2. Getting the Latest Source<a class="headerlink" href="#getting-the-latest-source" title="Permalink to this headline">¶</a></h2>
 <p>Clone the repository with git:</p>
-<div class="highlight-python"><pre>git clone git://github.com/rootpy/rootpy.git</pre>
+<div class="highlight-python"><div class="highlight"><pre>git clone git://github.com/rootpy/rootpy.git
+</pre></div>
 </div>
 <p>or checkout with svn:</p>
-<div class="highlight-python"><pre>svn checkout https://github.com/rootpy/rootpy/trunk rootpy</pre>
+<div class="highlight-python"><div class="highlight"><pre>svn checkout https://github.com/rootpy/rootpy/trunk rootpy
+</pre></div>
 </div>
 </div>
 <div class="section" id="manual-installation">
@@ -91,13 +94,16 @@
 <p>If you have obtained a copy of <cite>rootpy</cite> yourself use the <tt class="docutils literal"><span class="pre">setup.py</span></tt>
 script to install.</p>
 <p>To install in your <a class="reference external" href="http://www.python.org/dev/peps/pep-0370/">home directory</a>:</p>
-<div class="highlight-python"><pre>python setup.py install --user</pre>
+<div class="highlight-python"><div class="highlight"><pre>python setup.py install --user
+</pre></div>
 </div>
 <p>To install system-wide (requires root privileges):</p>
-<div class="highlight-python"><pre>sudo python setup.py install</pre>
+<div class="highlight-python"><div class="highlight"><pre>sudo python setup.py install
+</pre></div>
 </div>
 <p>To install optional requirements (<a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib</a>, <a class="reference external" href="http://numpy.scipy.org/">NumPy</a>, etc.):</p>
-<div class="highlight-python"><pre>pip install -U -r requirements/[roosh|array|...].txt</pre>
+<div class="highlight-python"><div class="highlight"><pre>pip install -U -r requirements/[roosh|array|...].txt
+</pre></div>
 </div>
 </div>
 <div class="section" id="automatic-installation">
@@ -110,13 +116,16 @@ script to install.</p>
 lacking many new unreleased features.</p>
 </div>
 <p>To install in your <a class="reference external" href="http://www.python.org/dev/peps/pep-0370/">home directory</a>:</p>
-<div class="highlight-python"><pre>pip install --user rootpy</pre>
+<div class="highlight-python"><div class="highlight"><pre>pip install --user rootpy
+</pre></div>
 </div>
 <p>To install system-wide (requires root privileges):</p>
-<div class="highlight-python"><pre>sudo pip install rootpy</pre>
+<div class="highlight-python"><div class="highlight"><pre>sudo pip install rootpy
+</pre></div>
 </div>
 <p>To install optional requirements (<a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib</a>, <a class="reference external" href="http://numpy.scipy.org/">NumPy</a>, etc.):</p>
-<div class="highlight-python"><pre>pip install --user rootpy[array,matplotlib,...]</pre>
+<div class="highlight-python"><div class="highlight"><pre>pip install --user rootpy[array,matplotlib,...]
+</pre></div>
 </div>
 <p>This requires
 <a class="reference external" href="http://www.pip-installer.org/en/latest/news.html#id3">pip version 1.1</a>
@@ -127,7 +136,8 @@ or later.</p>
 <p>If you installed <cite>rootpy</cite> into your home directory with the <cite>&#8211;user</cite> option
 above, add <tt class="docutils literal"><span class="pre">${HOME}/.local/bin</span></tt> to your <tt class="docutils literal"><span class="pre">${PATH}</span></tt> if it is not there
 already (put this in your .bashrc):</p>
-<div class="highlight-python"><pre>export PATH=${HOME}/.local/bin${PATH:+:$PATH}</pre>
+<div class="highlight-python"><div class="highlight"><pre>export PATH=${HOME}/.local/bin${PATH:+:$PATH}
+</pre></div>
 </div>
 </div>
 </div>
@@ -200,7 +210,7 @@ already (put this in your .bashrc):</p>
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

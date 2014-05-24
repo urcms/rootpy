@@ -57,7 +57,13 @@
 <span class="c"># distributed under the terms of the GNU General Public License</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
+<span class="kn">import</span> <span class="nn">ROOT</span>
+
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">log</span><span class="p">;</span> <span class="n">log</span> <span class="o">=</span> <span class="n">log</span><span class="p">[</span><span class="n">__name__</span><span class="p">]</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">IN_IPYTHON_NOTEBOOK</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">QROOT</span>
+<span class="kn">from</span> <span class="nn">..utils.hook</span> <span class="kn">import</span> <span class="n">classhook</span><span class="p">,</span> <span class="n">super_overridden</span>
+<span class="kn">from</span> <span class="nn">..memory.keepalive</span> <span class="kn">import</span> <span class="n">keepalive</span>
 <span class="kn">from</span> <span class="nn">.hist</span> <span class="kn">import</span> <span class="n">Hist</span><span class="p">,</span> <span class="n">Hist1D</span><span class="p">,</span> <span class="n">Hist2D</span><span class="p">,</span> <span class="n">Hist3D</span><span class="p">,</span> <span class="n">Efficiency</span><span class="p">,</span> <span class="n">HistStack</span><span class="p">,</span> <span class="n">histogram</span>
 <span class="kn">from</span> <span class="nn">.graph</span> <span class="kn">import</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">Graph1D</span><span class="p">,</span> <span class="n">Graph2D</span>
 <span class="kn">from</span> <span class="nn">.profile</span> <span class="kn">import</span> <span class="n">Profile</span><span class="p">,</span> <span class="n">Profile1D</span><span class="p">,</span> <span class="n">Profile2D</span><span class="p">,</span> <span class="n">Profile3D</span>
@@ -75,6 +81,22 @@
     <span class="s">&#39;Legend&#39;</span><span class="p">,</span> <span class="s">&#39;Canvas&#39;</span><span class="p">,</span> <span class="s">&#39;Pad&#39;</span><span class="p">,</span>
     <span class="s">&#39;Style&#39;</span><span class="p">,</span> <span class="s">&#39;get_style&#39;</span><span class="p">,</span> <span class="s">&#39;set_style&#39;</span><span class="p">,</span>
 <span class="p">]</span>
+
+<span class="k">if</span> <span class="n">IN_IPYTHON_NOTEBOOK</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">..interactive</span> <span class="kn">import</span> <span class="n">notebook</span>
+    <span class="n">notebook</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
+
+<span class="nd">@classhook</span><span class="p">(</span><span class="n">QROOT</span><span class="o">.</span><span class="n">TH1</span><span class="p">,</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TF1</span><span class="p">,</span>
+           <span class="n">QROOT</span><span class="o">.</span><span class="n">THStack</span><span class="p">,</span>
+           <span class="n">QROOT</span><span class="o">.</span><span class="n">TGraph</span><span class="p">,</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TGraph2D</span><span class="p">,</span>
+           <span class="n">QROOT</span><span class="o">.</span><span class="n">TBox</span><span class="p">,</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TText</span><span class="p">,</span>
+           <span class="n">QROOT</span><span class="o">.</span><span class="n">TLegend</span><span class="p">,</span>
+           <span class="n">QROOT</span><span class="o">.</span><span class="n">TLine</span><span class="p">,</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TEllipse</span><span class="p">,</span> <span class="n">QROOT</span><span class="o">.</span><span class="n">TArrow</span><span class="p">)</span>
+<span class="nd">@super_overridden</span>
+<span class="k">class</span> <span class="nc">DrawableKeepAlive</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">Draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">keepalive</span><span class="p">(</span><span class="n">ROOT</span><span class="o">.</span><span class="n">gPad</span><span class="o">.</span><span class="n">func</span><span class="p">(),</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">DrawableKeepAlive</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
           </div>
@@ -116,7 +138,7 @@
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

@@ -69,11 +69,13 @@ and later submit a pull request.</p>
 <p>Testing requires the <a class="reference external" href="https://nose.readthedocs.org/en/latest/">nose</a> package.
 Once rootpy is installed, it may be tested (from outside the source directory)
 by running:</p>
-<div class="highlight-python"><pre>nosetests --exe -v -a '!slow' rootpy</pre>
+<div class="highlight-python"><div class="highlight"><pre>nosetests --exe -v -a &#39;!slow&#39; rootpy
+</pre></div>
 </div>
 <p>rootpy can also be tested before installing by running this from inside the
 source directory:</p>
-<div class="highlight-python"><pre>make test</pre>
+<div class="highlight-python"><div class="highlight"><pre>make test
+</pre></div>
 </div>
 </div>
 <div class="section" id="writing-documentation">
@@ -89,21 +91,25 @@ the <a class="reference external" href="https://github.com/numpy/numpy/blob/mast
 </div>
 <p>The html is then found in <cite>_build/html</cite>.
 To preview the docs locally before uploading:</p>
-<div class="highlight-python"><pre>make show</pre>
+<div class="highlight-python"><div class="highlight"><pre>make show
+</pre></div>
 </div>
 </div>
 <div class="section" id="uploading-the-docs">
 <h3>8.2.2. Uploading the docs<a class="headerlink" href="#uploading-the-docs" title="Permalink to this headline">¶</a></h3>
 <p>If you have not done so already, add a reference to the main rootpy repository
 from your fork:</p>
-<div class="highlight-python"><pre>git remote add upstream https://github.com/rootpy/rootpy.git</pre>
+<div class="highlight-python"><div class="highlight"><pre>git remote add upstream https://github.com/rootpy/rootpy.git
+</pre></div>
 </div>
 <p>Create a local branch that tracks the main <tt class="docutils literal"><span class="pre">gh-pages</span></tt> branch:</p>
-<div class="highlight-python"><pre>git fetch upstream
-git branch gh-pages upstream/gh-pages</pre>
+<div class="highlight-python"><div class="highlight"><pre>git fetch upstream
+git branch gh-pages upstream/gh-pages
+</pre></div>
 </div>
 <p>To upload the docs to <cite>http://rootpy.github.com/rootpy/</cite>:</p>
-<div class="highlight-python"><pre>make gh-pages</pre>
+<div class="highlight-python"><div class="highlight"><pre>make gh-pages
+</pre></div>
 </div>
 <p>You will be prompted for your username and password.</p>
 </div>
@@ -127,7 +133,8 @@ unless there is a particularly good reason to. Instead of merging in
 lose code if you&#8217;re not careful. Git&#8217;s merging algorithm is actually quite dumb,
 so it&#8217;s best to keep it simple.</p>
 <p>See rootpy&#8217;s network for a graphical view of rootpy&#8217;s entire history:</p>
-<div class="highlight-python"><pre>https://github.com/rootpy/rootpy/network</pre>
+<div class="highlight-python"><div class="highlight"><pre>https://github.com/rootpy/rootpy/network
+</pre></div>
 </div>
 <p>Let&#8217;s all try our best to keep this graph as clean as possible.</p>
 </div>
@@ -136,24 +143,27 @@ so it&#8217;s best to keep it simple.</p>
 <div class="section" id="using-a-debug-python-build">
 <h3>8.5.1. Using a debug python build<a class="headerlink" href="#using-a-debug-python-build" title="Permalink to this headline">¶</a></h3>
 <p>The following CPython configure arguments can be used to obtain a debug build:</p>
-<div class="highlight-python"><pre>python-6.6.6/build $ ../configure --enable-shared --with-pydebug --without-pymalloc --prefix=install/path</pre>
+<div class="highlight-python"><div class="highlight"><pre>python-6.6.6/build $ ../configure --enable-shared --with-pydebug --without-pymalloc --prefix=install/path
+</pre></div>
 </div>
 <p>But beware! You will need to build ROOT against this python build. And beware
 that GDB might be linked against python. If that&#8217;s the case, then it will segfault when it starts
 if it picks up an incompatible build:</p>
-<div class="highlight-python"><pre>$ gdb
-gdb: Symbol `_Py_ZeroStruct' has different size in shared object, consider re-linking
-gdb: Symbol `PyBool_Type' has different size in shared object, consider re-linking
-gdb: Symbol `_Py_NotImplementedStruct' has different size in shared object, consider re-linking
-gdb: Symbol `PyFloat_Type' has different size in shared object, consider re-linking
-gdb: Symbol `_Py_TrueStruct' has different size in shared object, consider re-linking
-gdb: Symbol `_Py_NoneStruct' has different size in shared object, consider re-linking
-Segmentation fault</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ gdb
+gdb: Symbol `_Py_ZeroStruct&#39; has different size in shared object, consider re-linking
+gdb: Symbol `PyBool_Type&#39; has different size in shared object, consider re-linking
+gdb: Symbol `_Py_NotImplementedStruct&#39; has different size in shared object, consider re-linking
+gdb: Symbol `PyFloat_Type&#39; has different size in shared object, consider re-linking
+gdb: Symbol `_Py_TrueStruct&#39; has different size in shared object, consider re-linking
+gdb: Symbol `_Py_NoneStruct&#39; has different size in shared object, consider re-linking
+Segmentation fault
+</pre></div>
 </div>
 <p>The way around this is to preload the correct library by setting LD_PRELOAD, and
 then unsetting it before your program is executed. For example, this will debug
 <cite>my-program-to-debug</cite>:</p>
-<div class="highlight-python"><pre>LD_PRELOAD=/usr/lib/libpython2.7.so gdb -ex 'set environ LD_PRELOAD' --args my-program-to-debug</pre>
+<div class="highlight-python"><div class="highlight"><pre>LD_PRELOAD=/usr/lib/libpython2.7.so gdb -ex &#39;set environ LD_PRELOAD&#39; --args my-program-to-debug
+</pre></div>
 </div>
 <p>Note that you need to set LD_PRELOAD to the right version of python that gdb was
 compiled against, which you can find with <cite>ldd $(which gdb)</cite> from a fresh
@@ -237,7 +247,7 @@ environment.</p>
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 

@@ -1,8 +1,0 @@
-rootpy.data.dataset.Fileset
-===========================
-
-.. currentmodule:: rootpy.data.dataset
-
-.. autoclass:: Fileset
-   :no-undoc-members:
-   :inherited-members:

@@ -77,26 +77,21 @@ associated to sets of tree branches.</p>
 
 <span class="c"># define the model</span>
 <span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">TreeModel</span><span class="p">):</span>
-
     <span class="c"># properties of particle &quot;a&quot;</span>
     <span class="n">a_x</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
     <span class="n">a_y</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
     <span class="n">a_z</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
-
     <span class="c"># properties of particle &quot;b&quot;</span>
     <span class="n">b_x</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
     <span class="n">b_y</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
     <span class="n">b_z</span> <span class="o">=</span> <span class="n">FloatCol</span><span class="p">()</span>
-
     <span class="c"># a collection of particles</span>
     <span class="n">col_x</span> <span class="o">=</span> <span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="s">&quot;float&quot;</span><span class="p">)</span>
     <span class="n">col_y</span> <span class="o">=</span> <span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="s">&quot;float&quot;</span><span class="p">)</span>
     <span class="n">col_z</span> <span class="o">=</span> <span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="s">&quot;float&quot;</span><span class="p">)</span>
     <span class="n">col_n</span> <span class="o">=</span> <span class="n">IntCol</span><span class="p">()</span>
-
     <span class="c"># a TLorentzVector</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">LorentzVector</span>
-
     <span class="n">i</span> <span class="o">=</span> <span class="n">IntCol</span><span class="p">()</span>
 
 <span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Event</span><span class="p">)</span>
@@ -141,7 +136,6 @@ associated to sets of tree branches.</p>
 <span class="k">class</span> <span class="nc">Particle</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">who_is_your_daddy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="k">print</span> <span class="s">&quot;You are!&quot;</span>
 
 <span class="c"># define collections of objects by prefix</span>
@@ -222,7 +216,7 @@ associated to sets of tree branches.</p>
       </ul>
     </div>
 <div class="footer">
-    &copy; Copyright 2013, rootpy developers.
+    &copy; Copyright 2014, rootpy developers.
 </div>
 
 
