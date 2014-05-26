@@ -60,6 +60,39 @@
             
   <div class="section" id="module-rootpy.compiled">
 <span id="rootpy-compiled-compiling-c"></span><span id="compiled-ref"></span><h1><a class="reference internal" href="#module-rootpy.compiled" title="rootpy.compiled"><tt class="xref py py-mod docutils literal"><span class="pre">rootpy.compiled</span></tt></a>: Compiling C++<a class="headerlink" href="#module-rootpy.compiled" title="Permalink to this headline">¶</a></h1>
+<p>Easily compile and load C++ code from multiline Python strings or from external
+C++ files. The compiled libraries are cached in <tt class="docutils literal"><span class="pre">~/.cache/rootpy</span></tt> and loaded
+from there when requested again.</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Create the file <tt class="docutils literal"><span class="pre">test_compiled.cxx</span></tt> containing:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">AnswerToLtUaE</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">42</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">RootpyTestCompiled</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">blah</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">84</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Now automatically compile and load that file or C++ code in a string with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">rootpy.compiled</span> <span class="kn">as</span> <span class="nn">C</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">register_file</span><span class="p">(</span><span class="s">&quot;test_compiled.cxx&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="p">[</span><span class="s">&quot;AnswerToLtUaE&quot;</span><span class="p">,</span> <span class="s">&quot;RootpyTestCompiled&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">register_code</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="gp">... </span><span class="s">#include &lt;string&gt;</span>
+<span class="gp">... </span><span class="s">std::string _rootpy_test() { return &quot;Hello, world&quot;; }</span>
+<span class="gp">... </span><span class="s">&quot;&quot;&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;_rootpy_test&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">AnswerToLtUaE</span><span class="p">()</span>
+<span class="go">42</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">RootpyTestCompiled</span><span class="p">()</span><span class="o">.</span><span class="n">blah</span><span class="p">()</span>
+<span class="go">84</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">_rootpy_test</span><span class="p">()</span>
+<span class="go">&#39;Hello, world&#39;</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
@@ -69,10 +102,10 @@
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="generated/rootpy.compiled.register_code.html#rootpy.compiled.register_code" title="rootpy.compiled.register_code"><tt class="xref py py-obj docutils literal"><span class="pre">compiled.register_code</span></tt></a></td>
-<td>Note: This assumes that call site occurs exactly once.</td>
+<td>Register C++ code in a multiline string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/rootpy.compiled.register_file.html#rootpy.compiled.register_file" title="rootpy.compiled.register_file"><tt class="xref py py-obj docutils literal"><span class="pre">compiled.register_file</span></tt></a></td>
-<td></td>
+<td>Register C++ code in an external C++ file</td>
 </tr>
 </tbody>
 </table>
@@ -91,6 +124,7 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">rootpy.compiled</span></tt>: Compiling C++</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
 </li>

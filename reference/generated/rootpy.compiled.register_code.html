@@ -65,11 +65,27 @@
 <dl class="function">
 <dt id="rootpy.compiled.register_code">
 <tt class="descclassname">rootpy.compiled.</tt><tt class="descname">register_code</tt><big>(</big><em>self</em>, <em>code</em>, <em>symbols</em><big>)</big><a class="headerlink" href="#rootpy.compiled.register_code" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Note: This assumes that call site occurs exactly once.</dt>
-<dd>If you don&#8217;t do that, you&#8217;re better off writing to a temporary
-file and calling <cite>register_file</cite></dd>
-</dl>
+<dd><p>Register C++ code in a multiline string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>code</strong> : str</p>
+<blockquote>
+<div><p>A string containing the C++ code</p>
+</div></blockquote>
+<p><strong>symbols</strong> : list</p>
+<blockquote class="last">
+<div><p>A list of symbol names to extract from the compiled C++ code</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This assumes that call site occurs exactly once.
+If you don&#8217;t do that, you&#8217;re better off writing to a temporary
+file and calling <cite>register_file</cite></p>
 </dd></dl>
 
 </div>

@@ -29,5 +29,5 @@ to merge bins in specified windows of bin indices.
 .. literalinclude:: plot_bin_merging.py
     :lines: 11-
 
-**Total running time of the example:**  7.29 seconds
+**Total running time of the example:**  8.73 seconds
     

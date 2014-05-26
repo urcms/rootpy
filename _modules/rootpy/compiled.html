@@ -55,6 +55,47 @@
   <h1>Source code for rootpy.compiled</h1><div class="highlight"><pre>
 <span class="c"># Copyright 2012 the rootpy developers</span>
 <span class="c"># distributed under the terms of the GNU General Public License</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Easily compile and load C++ code from multiline Python strings or from external</span>
+<span class="sd">C++ files. The compiled libraries are cached in ``~/.cache/rootpy`` and loaded</span>
+<span class="sd">from there when requested again.</span>
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+
+<span class="sd">Create the file ``test_compiled.cxx`` containing:</span>
+
+<span class="sd">.. sourcecode:: c++</span>
+
+<span class="sd">   int AnswerToLtUaE() {</span>
+<span class="sd">       return 42;</span>
+<span class="sd">   }</span>
+
+<span class="sd">   class RootpyTestCompiled {</span>
+<span class="sd">   public:</span>
+<span class="sd">       int blah() { return 84; }</span>
+<span class="sd">   };</span>
+
+
+<span class="sd">Now automatically compile and load that file or C++ code in a string with:</span>
+
+<span class="sd">.. sourcecode:: python</span>
+
+<span class="sd">   &gt;&gt;&gt; import rootpy.compiled as C</span>
+<span class="sd">   &gt;&gt;&gt; C.register_file(&quot;test_compiled.cxx&quot;,</span>
+<span class="sd">   ...                 [&quot;AnswerToLtUaE&quot;, &quot;RootpyTestCompiled&quot;])</span>
+<span class="sd">   &gt;&gt;&gt; C.register_code(\&quot;\&quot;\&quot;</span>
+<span class="sd">   ... #include &lt;string&gt;</span>
+<span class="sd">   ... std::string _rootpy_test() { return &quot;Hello, world&quot;; }</span>
+<span class="sd">   ... \&quot;\&quot;\&quot;, [&quot;_rootpy_test&quot;])</span>
+<span class="sd">   &gt;&gt;&gt; C.AnswerToLtUaE()</span>
+<span class="sd">   42</span>
+<span class="sd">   &gt;&gt;&gt; C.RootpyTestCompiled().blah()</span>
+<span class="sd">   84</span>
+<span class="sd">   &gt;&gt;&gt; C._rootpy_test()</span>
+<span class="sd">   &#39;Hello, world&#39;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
 <span class="kn">import</span> <span class="nn">hashlib</span>
@@ -126,7 +167,6 @@
                 <span class="n">mtime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compiled_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtime</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">compiled</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Compiling {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compiled_path</span><span class="p">))</span>
             <span class="k">with</span> <span class="n">lock</span><span class="p">(</span><span class="n">pjoin</span><span class="p">(</span><span class="n">MODULES_PATH</span><span class="p">,</span> <span class="s">&quot;lock&quot;</span><span class="p">),</span> <span class="n">poll_interval</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
@@ -140,7 +180,6 @@
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ROOT</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
 
@@ -175,10 +214,20 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_symbol</span><span class="p">(</span><span class="n">what</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">register_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Note: This assumes that call site occurs exactly once.</span>
-<span class="sd">              If you don&#39;t do that, you&#39;re better off writing to a temporary</span>
-<span class="sd">              file and calling `register_file`</span>
+        <span class="sd">&quot;&quot;&quot;Register C++ code in a multiline string</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        code : str</span>
+<span class="sd">            A string containing the C++ code</span>
+<span class="sd">        symbols : list</span>
+<span class="sd">            A list of symbol names to extract from the compiled C++ code</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This assumes that call site occurs exactly once.</span>
+<span class="sd">        If you don&#39;t do that, you&#39;re better off writing to a temporary</span>
+<span class="sd">        file and calling `register_file`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">8</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.cxx&quot;</span>
         <span class="n">filepath</span> <span class="o">=</span> <span class="n">pjoin</span><span class="p">(</span><span class="n">MODULES_PATH</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
@@ -200,6 +249,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">registered_code</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span>
 
     <span class="k">def</span> <span class="nf">register_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register C++ code in an external C++ file</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            The path to a file containing C++ code</span>
+<span class="sd">        symbols : list</span>
+<span class="sd">            A list of symbol names to extract from the compiled C++ code</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">caller_directory</span><span class="p">,</span> <span class="n">caller_modulename</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller_location</span><span class="p">()</span>
 
         <span class="n">absfile</span> <span class="o">=</span> <span class="n">pjoin</span><span class="p">(</span><span class="n">caller_directory</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
@@ -215,7 +273,6 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine the path to Python.h</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">pydir</span> <span class="o">=</span> <span class="s">&quot;python{0.major}.{0.minor}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">pkgconfig</span><span class="p">():</span>
@@ -245,12 +302,10 @@
                 <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
                 <span class="k">continue</span>
-
             <span class="n">incdir</span> <span class="o">=</span> <span class="n">pjoin</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pydir</span><span class="p">)</span>
             <span class="n">py_h</span> <span class="o">=</span> <span class="n">pjoin</span><span class="p">(</span><span class="n">incdir</span><span class="p">,</span> <span class="s">&quot;Python.h&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">exists</span><span class="p">(</span><span class="n">py_h</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">incdir</span>
-
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;BUG: Unable to determine Python.h include path.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_python_includepath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
