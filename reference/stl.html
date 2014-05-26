@@ -60,13 +60,16 @@
             
   <div class="section" id="module-rootpy.stl">
 <span id="rootpy-stl-stl-dictionary-generation"></span><span id="stl-ref"></span><h1><a class="reference internal" href="#module-rootpy.stl" title="rootpy.stl"><tt class="xref py py-mod docutils literal"><span class="pre">rootpy.stl</span></tt></a>: STL Dictionary Generation<a class="headerlink" href="#module-rootpy.stl" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="rootpy-stl">
-<h2><a class="reference internal" href="#module-rootpy.stl" title="rootpy.stl"><tt class="xref py py-mod docutils literal"><span class="pre">rootpy.stl</span></tt></a><a class="headerlink" href="#rootpy-stl" title="Permalink to this headline">¶</a></h2>
 <p>This module allows C++ template types to be generated on demand with ease,
-automatically building dictionaries with ROOT&#8217;s ACLiC as necessary.</p>
-<p>It contains a C++ template typename parser written in
-<tt class="xref py py-mod docutils literal"><span class="pre">rootpy.extern.pyparsing</span></tt>.</p>
-<p>Example use:</p>
+automatically building dictionaries with ROOT&#8217;s ACLiC as necessary.  Unlike
+vanilla ACLiC, rootpy&#8217;s stl module generates and compiles dictionaries without
+creating a mess of temporary files in your current working directory.
+Dictionaries are also cached in <tt class="docutils literal"><span class="pre">~/.cache/rootpy/</span></tt> and used by any future
+request for the same dictionary instead of compiling from scratch again.
+Templates can be arbitrarily nested, limited only by what ACLiC and CINT can
+handle.</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">rootpy.stl</span> <span class="kn">as</span> <span class="nn">stl</span><span class="o">,</span> <span class="nn">ROOT</span>
 
 <span class="c"># Create a vector type</span>
@@ -74,10 +77,43 @@ automatically building dictionaries with ROOT&#8217;s ACLiC as necessary.</p>
 <span class="c"># Instantiate</span>
 <span class="n">strvector</span> <span class="o">=</span> <span class="n">StrVector</span><span class="p">()</span>
 <span class="n">strvector</span><span class="o">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">)</span>
-<span class="c"># etc.</span>
 
 <span class="n">MapStrRoot</span> <span class="o">=</span> <span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">stl</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TH1D</span><span class="p">)</span>
 <span class="n">MapStrRootPtr</span> <span class="o">=</span> <span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">stl</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="s">&quot;TH1D*&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Dictionary generation type inference is flexible and can be nested:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">rootpy.stl</span> <span class="kn">as</span> <span class="nn">stl</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ROOT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rootpy.plotting</span> <span class="kn">import</span> <span class="n">Hist</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="s">&#39;int&#39;</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.vector&lt;int,allocator&lt;int&gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.vector&lt;int,allocator&lt;int&gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="nb">long</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.vector&lt;long,allocator&lt;long&gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="s">&#39;vector&lt;int&gt;&#39;</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.vector&lt;vector&lt;int,allocator&lt;int&gt; &gt;,allocator&lt;vector&lt;int,allocator&lt;int&gt; &gt; &gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="s">&#39;int&#39;</span><span class="p">))</span>
+<span class="go">&lt;class &#39;ROOT.vector&lt;vector&lt;int,allocator&lt;int&gt; &gt;,allocator&lt;vector&lt;int,allocator&lt;int&gt; &gt; &gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="nb">int</span><span class="p">)))</span>
+<span class="go">&lt;class &#39;ROOT.vector&lt;vector&lt;vector&lt;int,allocator&lt;int&gt; &gt;,allocator&lt;vector&lt;int,allocator&lt;int&gt; &gt; &gt; &gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="s">&#39;string,int&#39;</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.map&lt;string,int,less&lt;string&gt;,allocator&lt;pair&lt;const string,int&gt; &gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="s">&#39;string&#39;</span><span class="p">,</span> <span class="s">&#39;int&#39;</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.map&lt;string,int,less&lt;string&gt;,allocator&lt;pair&lt;const string,int&gt; &gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">stl</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.map&lt;string,int,less&lt;string&gt;,allocator&lt;pair&lt;const string,int&gt; &gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.map&lt;string,int,less&lt;string&gt;,allocator&lt;pair&lt;const string,int&gt; &gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">stl</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="nb">float</span><span class="p">)))</span>
+<span class="go">&lt;class &#39;ROOT.map&lt;string,map&lt;int,vector&lt;float,allocator&lt;float&gt; &gt; &gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Hist</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.map&lt;string,TH1,less&lt;string&gt;,allocator&lt;pair&lt;const string,TH1&gt; &gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TH1</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.map&lt;string,TH1,less&lt;string&gt;,allocator&lt;pair&lt;const string,TH1&gt; &gt; &gt;&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stl</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="s">&#39;TH1*&#39;</span><span class="p">)</span>
+<span class="go">&lt;class &#39;ROOT.map&lt;string,TH1*,less&lt;string&gt;,allocator&lt;pair&lt;const string,TH1*&gt; &gt; &gt;&#39;&gt;</span>
 </pre></div>
 </div>
 </div>
@@ -90,7 +126,7 @@ automatically building dictionaries with ROOT&#8217;s ACLiC as necessary.</p>
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="generated/rootpy.stl.generate.html#rootpy.stl.generate" title="rootpy.stl.generate"><tt class="xref py py-obj docutils literal"><span class="pre">stl.generate</span></tt></a>(declaration[,&nbsp;headers,&nbsp;...])</td>
-<td></td>
+<td>Compile and load the reflection dictionary for a type.</td>
 </tr>
 </tbody>
 </table>
@@ -109,7 +145,7 @@ automatically building dictionaries with ROOT&#8217;s ACLiC as necessary.</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">rootpy.stl</span></tt>: STL Dictionary Generation</a><ul>
-<li><a class="reference internal" href="#rootpy-stl"><tt class="docutils literal"><span class="pre">rootpy.stl</span></tt></a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
 </li>

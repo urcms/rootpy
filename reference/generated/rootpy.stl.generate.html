@@ -65,7 +65,30 @@
 <dl class="function">
 <dt id="rootpy.stl.generate">
 <tt class="descclassname">rootpy.stl.</tt><tt class="descname">generate</tt><big>(</big><em>declaration</em>, <em>headers=None</em>, <em>has_iterators=False</em><big>)</big><a class="reference internal" href="../../_modules/rootpy/stl.html#generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.stl.generate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compile and load the reflection dictionary for a type.</p>
+<p>If the requested dictionary has already been cached, then load that instead.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>declaration</strong> : str</p>
+<blockquote>
+<div><p>A type declaration (for example &#8220;vector&lt;int&gt;&#8221;)</p>
+</div></blockquote>
+<p><strong>headers</strong> : str or list of str</p>
+<blockquote>
+<div><p>A header file or list of header files required to compile the dictionary
+for this type.</p>
+</div></blockquote>
+<p><strong>has_iterators</strong> : bool</p>
+<blockquote class="last">
+<div><p>If True, then include iterators in the dictionary generation.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 
