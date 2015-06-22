@@ -25,8 +25,8 @@ else:
     from .. import stl
 
     # generate dictionaries
-    stl.stack('RooAbsArg*,deque<RooAbsArg*>',
-              headers='<stack>;<deque>;RooRealVar.h')
+    #stl.stack('RooAbsArg*,deque<RooAbsArg*>',
+    #          headers='<stack>;<deque>;RooRealVar.h')
 
     from .workspace import Workspace
     from .modelconfig import ModelConfig
